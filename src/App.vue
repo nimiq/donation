@@ -1,8 +1,7 @@
 <template>
     <div id="app">
-        <SmallPage class="recipient-card">
-            RecipientCard
-        </SmallPage>
+        <RecipientCard :address="recipientAddress"></RecipientCard>
+
         <transition name="transition-fade">
             <div v-if="!recipientAddress || isMobile" class="welcome-message transition-opacity">
                 <h1>Get NIM Donations</h1>
@@ -14,17 +13,11 @@
                     </span>
                 </p>
             </div>
+
         </transition>
-        <transition name="transition-fade">
-            <div v-if="recipientAddress" class="button-card transition-opacity">
-                ButtonCard
-            </div>
-        </transition>
-        <transition name="transition-fade">
-            <div v-if="recipientAddress" class="qr-download-card transition-opacity">
-                QrDownloadCard
-            </div>
-        </transition>
+
+        <ButtonCard v-if="recipientAddress" :address="recipientAddress"></ButtonCard>
+        <DownloadCard v-if="recipientAddress" :address="recipientAddress"></DownloadCard>
     </div>
 </template>
 
@@ -33,13 +26,15 @@ import '@nimiq/style/nimiq-style.min.css';
 import '@nimiq/vue-components/dist/NimiqVueComponents.css';
 
 import { Component, Vue } from 'vue-property-decorator';
-import { SmallPage } from '@nimiq/vue-components';
-
-@Component({components: {SmallPage}})
+import { SmallPage, AddressDisplay, Identicon } from '@nimiq/vue-components';
+import DownloadCard from './components/DownloadCard.vue'
+import ButtonCard from './components/ButtonCard.vue'
+import RecipientCard from './components/RecipientCard.vue'
+@Component({components: {SmallPage, RecipientCard, ButtonCard, DownloadCard}})
 export default class App extends Vue {
     private static MOBILE_BREAKPOINT = 1150;
 
-    private recipientAddress: string | null = null;
+    private recipientAddress: string | null = 'NQ32 473Y R5T3 979R 325K S8UT 7E3A NRNS VBX2';
     private isMobile: boolean = false;
 
     private created() {
@@ -58,7 +53,7 @@ export default class App extends Vue {
 }
 </script>
 
-<style scoped>
+<style>
     #app {
         --card-height: 57.75rem;
         --recipient-card-width: 42.5rem;
@@ -111,6 +106,8 @@ export default class App extends Vue {
     .recipient-card {
         width: var(--recipient-card-width);
         margin: 0 calc(2 * var(--card-gap)) 0 0;
+        display: flex;
+
     }
 
     .button-card {
@@ -203,9 +200,7 @@ export default class App extends Vue {
             font-size: 2.5rem;
         }
     }
-</style>
 
-<style>
     .transition-opacity {
         transition: opacity .3s cubic-bezier(0.25, 0, 0, 1);
     }
