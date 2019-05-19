@@ -7,18 +7,30 @@
             </div>
 
             <div class="colors">
-                <div class="color nq-blue-bg"></div>
-                <div class="color nq-gold-bg"></div>
-                <div class="color nq-light-blue-bg"></div>
-                <div class="color nq-green-bg"></div>
-                <div class="color nq-orange-bg"></div>
-                <div class="color nq-red-bg"></div>
+                <div class="color-container" :class="{'active': buttonColor == ''}" >
+                    <div class="color nq-blue-bg"  @click="changeColor('')"></div>
+                </div>
+                <div class="color-container" :class="{'active': buttonColor == 'gold'}" >
+                    <div class="color nq-gold-bg" :class="{'active': buttonColor == 'gold'}" @click="changeColor('gold'); "></div>
+                </div>
+                <div class="color-container" :class="{'active': buttonColor == 'light-blue'}" >
+                    <div class="color nq-light-blue-bg" :class="{'active': buttonColor == 'light-blue'}" @click="changeColor('light-blue');"></div>
+                </div>
+                <div class="color-container" :class="{'active': buttonColor == 'green'}" >
+                    <div class="color nq-green-bg" :class="{'active': buttonColor == 'green'}" @click="changeColor('green')"></div>
+                </div>
+                <div class="color-container" :class="{'active': buttonColor == 'orange'}" >
+                    <div class="color nq-orange-bg" :class="{'active': buttonColor == 'orange'}" @click="changeColor('orange')"></div>
+                </div>
+                <div class="color-container" :class="{'active': buttonColor == 'red'}" >
+                    <div class="color nq-red-bg" :class="{'active': buttonColor == 'red'}" @click="changeColor('red')"></div>
+                </div>
             </div>
             <div class="buttons">
-                <div class="nq-button">
+                <div :class="`nq-button ${buttonColor}`">
                     Donate NIM
                 </div>
-                <div class="nq-button-s">
+                <div :class="`nq-button-s ${buttonColor}`">
                     Donate NIM
                 </div>
             </div>
@@ -33,11 +45,15 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator';
-
-
-    @Component({components: {}})
+    import {QrCode} from '@nimiq/vue-components'
+    @Component
     export default class ButtonCard extends Vue {
         @Prop(String) public address!: string;
+        private buttonColor:string = '';
+
+        public changeColor(color:string){
+            this.buttonColor = color;
+        }
     }
 </script>
 <style scoped>
@@ -61,8 +77,17 @@
         width: 16px;
         border-radius: 8px;
         cursor: pointer;
+        padding: 5px;
     }
-    .color:not(:last-child){
+    .colors .color-container{
+        border-radius: 12px;
+        padding: 4px;
+    }
+    .colors .color-container.active {
+        border: 2px solid rgba(31, 35, 72, 0.2);
+        padding: 2px;
+    }
+    .color-container:not(:last-child){
         margin-right: 16px;
     }
     .buttons {
