@@ -4,7 +4,7 @@
             RecipientCard
         </SmallPage>
         <transition name="transition-fade">
-            <div v-if="!recipientAddress" class="welcome-message transition-opacity">
+            <div v-if="!recipientAddress || isMobile" class="welcome-message transition-opacity">
                 <h1>Get NIM Donations</h1>
                 <p>
                     Easily receive donations by creating<br>
@@ -37,7 +37,24 @@ import { SmallPage } from '@nimiq/vue-components';
 
 @Component({components: {SmallPage}})
 export default class App extends Vue {
+    private static MOBILE_BREAKPOINT = 1150;
+
     private recipientAddress: string | null = null;
+    private isMobile: boolean = false;
+
+    private created() {
+        this._checkWindowSize = this._checkWindowSize.bind(this);
+        this._checkWindowSize();
+        window.addEventListener('resize', this._checkWindowSize);
+    }
+
+    private destroyed() {
+        window.removeEventListener('resize', this._checkWindowSize);
+    }
+
+    private _checkWindowSize() {
+        this.isMobile = window.innerWidth <= App.MOBILE_BREAKPOINT;
+    }
 }
 </script>
 
@@ -55,7 +72,10 @@ export default class App extends Vue {
         align-items: center;
     }
 
-    #app > * {
+    .welcome-message,
+    .recipient-card,
+    .button-card,
+    .qr-download-card {
         height: var(--card-height);
     }
 
@@ -89,7 +109,7 @@ export default class App extends Vue {
     }
 
     .recipient-card {
-        width: var(--recipient-card-width) !important;
+        width: var(--recipient-card-width);
         margin: 0 calc(2 * var(--card-gap)) 0 0;
     }
 
@@ -98,7 +118,7 @@ export default class App extends Vue {
         margin-right: var(--card-gap);
     }
 
-    .button-card.transition-fade-enter-active {
+    .welcome-message.transition-fade-leave-active + .button-card {
         margin-left: calc(-1 * var(--welcome-message-width)); /* to position it over the fading welcome message */
     }
 
@@ -111,6 +131,77 @@ export default class App extends Vue {
         border-radius: 1rem;
         /* --nimiq-blue-bg with .4 opacity (0A) */
         background: radial-gradient(413.00px at 100% 100%, #2601330A 0%, #1F23480A 100%);
+    }
+
+    @media (max-width: 1150px) {
+        #app {
+            --recipient-card-width: 62.5rem;
+            --button-card-width: 62.5rem;
+            --qr-download-card-width: 62.5rem;
+            --welcome-message-width: 62.5rem;
+
+            flex-direction: column;
+        }
+
+        .welcome-message,
+        .recipient-card,
+        .button-card,
+        .qr-download-card {
+            margin-right: 0;
+            margin-bottom: var(--card-gap);
+        }
+
+        .welcome-message {
+            order: -1;
+            height: auto;
+            padding-left: 0;
+            margin: 7rem 0;
+        }
+
+        .welcome-message h1 {
+            font-size: 6rem;
+        }
+
+        .welcome-message p {
+            margin-top: 3rem;
+            font-size: 3rem;
+        }
+
+        .recipient-card {
+            max-width: unset;
+            margin-bottom: calc(2 * var(--card-gap));
+        }
+
+        .welcome-message.transition-fade-leave-active + .button-card {
+            margin-left: 0;
+        }
+    }
+
+    @media (max-width: 540px) {
+        #app {
+            --recipient-card-width: 100%;
+            --button-card-width: 100%;
+            --qr-download-card-width: 100%;
+            --welcome-message-width: 100%;
+        }
+
+        .welcome-message {
+            margin-top: 4rem;
+        }
+
+        .welcome-message h1 {
+            font-size: 4rem;
+        }
+    }
+
+    @media (max-width: 450px) {
+        .welcome-message h1 {
+            font-size: 3rem;
+        }
+
+        .welcome-message p {
+            font-size: 2.5rem;
+        }
     }
 </style>
 
