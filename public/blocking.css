@@ -37,6 +37,7 @@ body > footer {
     display: flex;
     align-items: center;
     color: var(--nimiq-blue);
+    box-sizing: content-box;
 }
 
 .nq-icon {
