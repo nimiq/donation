@@ -26,7 +26,7 @@
                     <div class="color nq-red-bg" :class="{'active': buttonColor == 'red'}" @click="changeColor('red')"></div>
                 </div>
             </div>
-            <div class="buttons">
+            <div class="nq-buttons">
                 <div :class="`nq-button ${buttonColor}`">
                     Donate NIM
                 </div>
@@ -35,7 +35,20 @@
                 </div>
             </div>
             <div class="code-container">
-
+                <div class="code" v-if="preview == 'html'">
+                    &lt;div&gt;&lt;a href="{{safeLink}}"&gt;&lt;img src="lightImg.png"/&gt;&lt;/a&gt;&lt;/div&gt;
+                </div>
+                <div class="code" v-if="preview == 'bbcode'">
+                    [link={{safeLink}}][img]lightImg.png[/img][/link]
+                </div>
+                <div class="code" v-if="preview == 'markdown'">
+                    [![Donate](lightImg.png)]({{safeLink}})
+                </div>
+                <div class="buttons">
+                    <div class="nq-button-s" :class="{'active': preview === 'html'}" @click="preview = 'html'">HTML</div>
+                    <div class="nq-button-s" :class="{'active': preview === 'bbcode'}" @click="preview = 'bbcode'">BBCode</div>
+                    <div class="nq-button-s" :class="{'active': preview === 'markdown'}" @click="preview = 'markdown'">Markdown</div>
+                </div>
             </div>
         </div>
     </transition>
@@ -48,9 +61,11 @@
     import {QrCode} from '@nimiq/vue-components'
     @Component
     export default class ButtonCard extends Vue {
-        @Prop(String) public address!: string;
+        @Prop(String) public address: string;
         private buttonColor:string = '';
-
+        private displayAddress:string = this.address.split(' ').join('');
+        private safeLink:string = `safe.nimiq.com/#_request/ ${this.displayAddress}`;
+        private preview:string = 'html';
         public changeColor(color:string){
             this.buttonColor = color;
         }
@@ -90,7 +105,7 @@
     .color-container:not(:last-child){
         margin-right: 16px;
     }
-    .buttons {
+    .nq-buttons {
         padding: 0 32px;
     }
     .nq-button {
@@ -110,5 +125,25 @@
         right: 0;
         bottom: 0;
         height: 150px;
+        padding: 24px 0 16px 24px;
+        overflow: hidden;
+    }
+
+    .code-container .buttons .nq-button-s.active{
+        background-color: rgba(255,255,255, 0.2);
+        color: #FFFFFF;
+    }
+    .code-container .buttons .nq-button-s{
+        color: rgba(255, 255, 255, 0.5);
+    }
+
+    .code-container .code {
+        color: #FFFFFF;
+        opacity: 0.6;
+        font-size: 16px;
+        line-height: 20px;
+        letter-spacing: 1.5px;
+        position: relative;
+        margin-bottom: 24px;
     }
 </style>
