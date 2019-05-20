@@ -24,13 +24,12 @@
 <script lang="ts">
 import '@nimiq/style/nimiq-style.min.css';
 import '@nimiq/vue-components/dist/NimiqVueComponents.css';
-
 import { Component, Vue } from 'vue-property-decorator';
-import { SmallPage, AddressDisplay, Identicon } from '@nimiq/vue-components';
-import DownloadCard from './components/DownloadCard.vue'
-import ButtonCard from './components/ButtonCard.vue'
-import RecipientCard from './components/RecipientCard.vue'
-@Component({components: {SmallPage, RecipientCard, ButtonCard, DownloadCard}})
+import DownloadCard from './components/DownloadCard.vue';
+import ButtonCard from './components/ButtonCard.vue';
+import RecipientCard from './components/RecipientCard.vue';
+
+@Component({components: {RecipientCard, ButtonCard, DownloadCard}})
 export default class App extends Vue {
     private static MOBILE_BREAKPOINT = 1150;
 
@@ -53,7 +52,7 @@ export default class App extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
     #app {
         --card-height: 57.75rem;
         --recipient-card-width: 42.5rem;
@@ -106,8 +105,6 @@ export default class App extends Vue {
     .recipient-card {
         width: var(--recipient-card-width);
         margin: 0 calc(2 * var(--card-gap)) 0 0;
-        display: flex;
-
     }
 
     .button-card {
@@ -200,7 +197,9 @@ export default class App extends Vue {
             font-size: 2.5rem;
         }
     }
+</style>
 
+<style>
     .transition-opacity {
         transition: opacity .3s cubic-bezier(0.25, 0, 0, 1);
     }

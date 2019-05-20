@@ -3,28 +3,14 @@
         <div v-if="address" class="button-card transition-opacity">
             <h1 class="nq-h1">Get a button...</h1>
             <div class="nq-text">
-                Select the button colour and size and choose an output format.
+                <p>Select the button color and size and choose an output format.</p>
             </div>
 
             <div class="colors">
-                <div class="color-container" :class="{'active': buttonColor == ''}" >
-                    <div class="color nq-blue-bg"  @click="changeColor('')"></div>
+                <div class="color-container" v-for="color in colors" :class="{'active': buttonColor == color}" >
+                    <div :class="`color nq-${color}-bg`"  @click="changeColor(color)"></div>
                 </div>
-                <div class="color-container" :class="{'active': buttonColor == 'gold'}" >
-                    <div class="color nq-gold-bg" :class="{'active': buttonColor == 'gold'}" @click="changeColor('gold'); "></div>
-                </div>
-                <div class="color-container" :class="{'active': buttonColor == 'light-blue'}" >
-                    <div class="color nq-light-blue-bg" :class="{'active': buttonColor == 'light-blue'}" @click="changeColor('light-blue');"></div>
-                </div>
-                <div class="color-container" :class="{'active': buttonColor == 'green'}" >
-                    <div class="color nq-green-bg" :class="{'active': buttonColor == 'green'}" @click="changeColor('green')"></div>
-                </div>
-                <div class="color-container" :class="{'active': buttonColor == 'orange'}" >
-                    <div class="color nq-orange-bg" :class="{'active': buttonColor == 'orange'}" @click="changeColor('orange')"></div>
-                </div>
-                <div class="color-container" :class="{'active': buttonColor == 'red'}" >
-                    <div class="color nq-red-bg" :class="{'active': buttonColor == 'red'}" @click="changeColor('red')"></div>
-                </div>
+
             </div>
             <div class="nq-buttons">
                 <div :class="`nq-button ${buttonColor}`">
@@ -36,13 +22,13 @@
             </div>
             <div class="code-container">
                 <div class="code" v-if="preview == 'html'">
-                    &lt;div&gt;&lt;a href="{{safeLink}}"&gt;&lt;img src="lightImg.png"/&gt;&lt;/a&gt;&lt;/div&gt;
+                    &lt;div&gt;&lt;a href="{{safeLink}}"&gt;&lt;img src="button-{{buttonColor}}.png"/&gt;&lt;/a&gt;&lt;/div&gt;
                 </div>
                 <div class="code" v-if="preview == 'bbcode'">
-                    [link={{safeLink}}][img]lightImg.png[/img][/link]
+                    [link={{safeLink}}][img]button-{{buttonColor}}.png[/img][/link]
                 </div>
                 <div class="code" v-if="preview == 'markdown'">
-                    [![Donate](lightImg.png)]({{safeLink}})
+                    [![Donate](button-{{buttonColor}}.png)]({{safeLink}})
                 </div>
                 <div class="buttons">
                     <div class="nq-button-s" :class="{'active': preview === 'html'}" @click="preview = 'html'">HTML</div>
@@ -58,67 +44,88 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator';
-    import {QrCode} from '@nimiq/vue-components'
+
     @Component
     export default class ButtonCard extends Vue {
         @Prop(String) public address: string;
-        private buttonColor:string = '';
+        private buttonColor:string = 'blue';
         private displayAddress:string = this.address.split(' ').join('');
         private safeLink:string = `safe.nimiq.com/#_request/ ${this.displayAddress}`;
+        private colors:Array = ['blue', 'gold', 'light-blue', 'green', 'orange', 'red']
+
         private preview:string = 'html';
         public changeColor(color:string){
             this.buttonColor = color;
         }
     }
 </script>
+
 <style scoped>
     .button-card {
         position: relative;
     }
+
     .nq-h1 {
         text-align: center;
     }
+
     .nq-text{
         text-align: center;
-        padding: 0 60px;
+        max-width: 293px;
+        margin: 0 auto;
     }
+
     .colors {
         display: flex;
         justify-content: center;
         margin-bottom: 29px;
     }
+
     .colors .color {
         height: 16px;
         width: 16px;
         border-radius: 8px;
         cursor: pointer;
         padding: 5px;
+        transition: transform 450ms cubic-bezier(.25,0,0,1),box-shadow 450ms cubic-bezier(.25,0,0,1);
     }
+
+    .colors .color:hover {
+        box-shadow: 0 1rem 2.5rem rgba(0,0,0,.2);
+        transform: translate3D(0,-2px,0);
+    }
+
     .colors .color-container{
         border-radius: 12px;
         padding: 4px;
     }
+
     .colors .color-container.active {
         border: 2px solid rgba(31, 35, 72, 0.2);
         padding: 2px;
     }
+
     .color-container:not(:last-child){
         margin-right: 16px;
     }
+
     .nq-buttons {
         padding: 0 32px;
     }
+
     .nq-button {
         line-height: 7.5rem;
         max-width: 220px;
         display: inline-block;
         margin-right: 18px;
     }
+
     .nq-button-s {
         line-height: 3.375rem;
     }
+
     .code-container {
-        background: radial-gradient(401.00px at 100% 100%, #260133 0%, #1F2348 100%);
+        background: var(--nimiq-blue-bg);
         border-radius: 4px;
         position: absolute;
         left: 0;
@@ -129,21 +136,21 @@
         overflow: hidden;
     }
 
-    .code-container .buttons .nq-button-s.active{
-        background-color: rgba(255,255,255, 0.2);
-        color: #FFFFFF;
-    }
     .code-container .buttons .nq-button-s{
         color: rgba(255, 255, 255, 0.5);
     }
 
-    .code-container .code {
+    .code-container .buttons .nq-button-s.active{
+        background-color: rgba(255,255,255, 0.2);
         color: #FFFFFF;
+    }
+
+    .code-container .code {
+        color: white;
         opacity: 0.6;
         font-size: 16px;
         line-height: 20px;
         letter-spacing: 1.5px;
-        position: relative;
         margin-bottom: 24px;
     }
 </style>

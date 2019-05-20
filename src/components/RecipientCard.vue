@@ -2,22 +2,24 @@
     <SmallPage class="recipient-card">
         <Identicon :address="address"></Identicon>
         <AddressDisplay :address="address"></AddressDisplay>
-        <div class="seperator"></div>
-        <input class="nq-input vanishing" type="text" placeholder="Add a Message"/>
+        <hr class="separator" />
+        <input v-model="message" class="nq-input vanishing" type="text" placeholder="Add a Message"/>
         <div class="nq-text-s">(optional)</div>
     </SmallPage>
 </template>
 
 
 <script lang="ts">
-    import '@nimiq/style/nimiq-style.min.css';
     import {SmallPage, Identicon, AddressDisplay} from '@nimiq/vue-components';
     import {Component, Vue, Prop} from 'vue-property-decorator';
+
     @Component({components: {SmallPage, Identicon, AddressDisplay}})
     export default class RecipientCard extends Vue {
         @Prop(String) public address!: string;
+        private message:string = ''
     }
 </script>
+
 <style scoped>
     .recipient-card {
         align-items: center;
@@ -34,11 +36,11 @@
         margin-bottom: 39px;
     }
 
-    .recipient-card .seperator {
+    .recipient-card .separator {
         height: 1px;
         width: 100%;
         opacity: 0.1;
-        border: 1px solid #1F2348;
+        border: 1px solid var(--nimiq-blue);
         margin-bottom: 30px;
     }
 
@@ -47,7 +49,7 @@
     }
 
     .recipient-card .nq-text-s {
-        color: #1F2348;
+        color: var(--nimiq-blue);
         /* Dark Blue */
         opacity: 0.3;
     }
