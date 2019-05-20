@@ -34,6 +34,7 @@
                     <div class="nq-button-s" :class="{'active': preview === 'html'}" @click="preview = 'html'">HTML</div>
                     <div class="nq-button-s" :class="{'active': preview === 'bbcode'}" @click="preview = 'bbcode'">BBCode</div>
                     <div class="nq-button-s" :class="{'active': preview === 'markdown'}" @click="preview = 'markdown'">Markdown</div>
+                    <div class="nq-button-s light-blue">Copy</div>
                 </div>
             </div>
         </div>
@@ -43,21 +44,28 @@
 
 
 <script lang="ts">
-    import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop } from 'vue-property-decorator';
 
-    @Component
-    export default class ButtonCard extends Vue {
-        @Prop(String) public address: string;
-        private buttonColor:string = 'blue';
-        private displayAddress:string = this.address.split(' ').join('');
-        private safeLink:string = `safe.nimiq.com/#_request/ ${this.displayAddress}`;
-        private colors:Array = ['blue', 'gold', 'light-blue', 'green', 'orange', 'red']
+export type ButtonColors = 'blue' | 'gold' | 'light-blue' | 'green' | 'orange' | 'red';
+export type Previews = 'html' | 'bbcode' | 'markdown';
 
-        private preview:string = 'html';
-        public changeColor(color:string){
-            this.buttonColor = color;
-        }
+@Component
+export default class ButtonCard extends Vue {
+
+    @Prop(String) public address: string;
+
+    private buttonColor: ButtonColors = 'blue';
+    private displayAddress: string = this.address.split(' ').join('');
+
+    private safeLink: string = `safe.nimiq.com/#_request/ ${this.displayAddress}`;
+
+    private colors: any[] = ['blue', 'gold', 'light-blue', 'green', 'orange', 'red'];
+
+    private preview: Previews = 'html';
+    public changeColor(color: string) {
+        this.buttonColor = color;
     }
+}
 </script>
 
 <style scoped>
@@ -142,7 +150,7 @@
 
     .code-container .buttons .nq-button-s.active{
         background-color: rgba(255,255,255, 0.2);
-        color: #FFFFFF;
+        color: white;
     }
 
     .code-container .code {

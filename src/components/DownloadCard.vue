@@ -19,15 +19,17 @@
 
 
 <script lang="ts">
-    import { Component, Vue, Prop } from 'vue-property-decorator';
-    import {QrCode} from '@nimiq/vue-components'
+import { Component, Vue, Prop } from 'vue-property-decorator';
+import { QrCode } from '@nimiq/vue-components';
 
-    @Component({components: {QrCode}})
-    export default class DownloadCard extends Vue {
-        @Prop(String) public address: string;
-        private displayAddress:string = this.address.split(' ').join('')
+@Component({components: {QrCode}})
+export default class DownloadCard extends Vue {
 
-    }
+    @Prop(String) public address: string;
+
+    private displayAddress: string = this.address.split(' ').join('');
+
+}
 </script>
 
 <style scoped>
