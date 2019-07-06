@@ -16,7 +16,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
 @Component({components: {SmallPage, Identicon, AddressDisplay}})
 export default class RecipientCard extends Vue {
 
-    @Prop(String) public address: string;
+    @Prop(String) public address!: string;
 
     private message: string = '';
 }

@@ -52,17 +52,17 @@ export type Previews = 'html' | 'bbcode' | 'markdown';
 @Component
 export default class ButtonCard extends Vue {
 
-    @Prop(String) public address: string;
+    @Prop(String) public address!: string;
 
     private buttonColor: ButtonColors = 'blue';
     private displayAddress: string = this.address.split(' ').join('');
 
-    private safeLink: string = `safe.nimiq.com/#_request/ ${this.displayAddress}`;
+    private safeLink: string = `safe.nimiq.com/#_request/${this.displayAddress}`;
 
-    private colors: any[] = ['blue', 'gold', 'light-blue', 'green', 'orange', 'red'];
+    private colors: ButtonColors[] = ['blue', 'gold', 'light-blue', 'green', 'orange', 'red'];
 
     private preview: Previews = 'html';
-    public changeColor(color: string) {
+    public changeColor(color: ButtonColors) {
         this.buttonColor = color;
     }
 }

@@ -25,7 +25,7 @@ import { QrCode } from '@nimiq/vue-components';
 @Component({components: {QrCode}})
 export default class DownloadCard extends Vue {
 
-    @Prop(String) public address: string;
+    @Prop(String) public address!: string;
 
     private displayAddress: string = this.address.split(' ').join('');
 
