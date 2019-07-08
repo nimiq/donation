@@ -131,8 +131,6 @@ export default ButtonCard;
 
 <style scoped>
     .button-card {
-        --nqTimingFunction: cubic-bezier(0.25, 0, 0, 1);
-
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -162,7 +160,7 @@ export default ButtonCard;
         margin-top: var(--dots-size);
         border-radius: 50%;
         cursor: pointer;
-        transition: transform .2s var(--nqTimingFunction);
+        transition: transform .2s var(--nimiq-timing-function);
     }
 
     .dot:hover {
@@ -216,7 +214,7 @@ export default ButtonCard;
         border: .25rem solid var(--nimiq-blue);
         border-radius: calc(var(--offset) * -10);
         opacity: 0;
-        transition: .3s opacity var(--nqTimingFunction);
+        transition: .3s opacity var(--nimiq-timing-function);
     }
 
     .selected::after,
@@ -270,7 +268,7 @@ export default ButtonCard;
     .code-section-buttons .inactive {
         background: none;
         opacity: .5;
-        transition: .3s opacity var(--nqTimingFunction);
+        transition: .3s opacity var(--nimiq-timing-function);
     }
 
     .code-section-buttons .inactive:hover {
@@ -295,7 +293,7 @@ export default ButtonCard;
     }
 
     .transition-fadeout-leave-active {
-        transition: 2s opacity var(--nqTimingFunction);
+        transition: 2s opacity var(--nimiq-timing-function);
     }
 
     .transition-fadeout-leave-to {

@@ -12,6 +12,7 @@ html {
     --nimiq-gray: #F4F4F5;
     --nimiq-gray-bg: radial-gradient(circle at bottom right, #F4F4F4, var(--nimiq-gray));
     --nimiq-blue: #1F2348;
+    --nimiq-timing-function: cubic-bezier(0.25, 0, 0, 1);
 }
 
 body {
@@ -102,7 +103,7 @@ body > footer > a {
     color: inherit;
     text-decoration: none;
     opacity: .7;
-    transition: opacity .3s cubic-bezier(0.25, 0, 0, 1);
+    transition: opacity .3s var(--nimiq-timing-function);
 }
 
 body > footer > a:hover {
