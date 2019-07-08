@@ -2,21 +2,21 @@
     <div class="button-card">
         <div class="title">
             <h1 class="nq-h1">Get a button...</h1>
-            <p class="nq-text">Select the button colour and size and choose an output format.</p>
+            <p class="nq-text">Select the button color and size and choose an output format.</p>
         </div>
         <div class="dots">
             <div v-for="color in dotsColors"
                  class="dot"
-                 :class="[`nq-${color}-bg`, { selected: color === currentColor }]"
-                 @click="currentColor = color">
+                 :class="[`nq-${color}-bg`, { selected: color === selectedColor }]"
+                 @click="selectedColor = color">
             </div>
         </div>
         <div class="buttons">
             <button v-for="buttonSize in buttonSizes"
-                    @click="currentSize = buttonSize"
-                    :style="{ background: `var(--nimiq-${currentColor}-bg)` }"
-                    :class="[currentColor, {
-                        selected: currentSize === buttonSize,
+                    @click="selectedSize = buttonSize"
+                    :style="{ background: `var(--nimiq-${selectedColor}-bg)` }"
+                    :class="[selectedColor, {
+                        selected: selectedSize === buttonSize,
                         'nq-button': buttonSize === 'big',
                         'nq-button-pill': buttonSize === 'small',
                     }]">
@@ -24,21 +24,20 @@
             </button>
         </div>
         <div class="nq-blue-bg code-section">
-            <code>{{currentMarkupCode}}</code>
+            <code>{{markupCode}}</code>
             <div class="code-section-buttons">
                 <button v-for="markupLanguage in markupLanguages"
-                        @click="currentMarkupLanguage = markupLanguage"
-                        :class="{ inactive: markupLanguage.type !== currentMarkupLanguage.type }"
+                        @click="selectedMarkupLanguage = markupLanguage"
+                        :class="{ inactive: markupLanguage !== selectedMarkupLanguage }"
                         class="nq-button-s inverse">
                     {{markupLanguage.type}}
                 </button>
-                <button @click="copyMarkupCode()" class="nq-button-pill light-blue">Copy</button>
+                <button @click="copyMarkupCode" class="nq-button-pill light-blue">copy</button>
             </div>
             <transition name="transition-fadeout">
-                <div v-if="copyNotifOpened" class="copy-notification">Copied Successfully</div>
+                <div v-if="copyNotificationOpen" class="copy-notification">Copied Successfully</div>
             </transition>
         </div>
-
     </div>
 </template>
 
@@ -58,10 +57,10 @@ export default class ButtonCard extends Vue {
     @Prop(String) public requestLink!: string;
 
     private dotsColors: ButtonColor[] = ['blue', 'gold', 'light-blue', 'green', 'orange', 'red'];
-    private currentColor: ButtonColor = 'light-blue';
+    private selectedColor: ButtonColor = 'light-blue';
 
     private buttonSizes: ButtonSize[] = ['big', 'small'];
-    private currentSize: ButtonSize = 'big';
+    private selectedSize: ButtonSize = 'big';
 
     private baseUrl: string = 'https://nimiq.com/donationBtnImg';
 
@@ -74,24 +73,24 @@ export default class ButtonCard extends Vue {
             code: '[url=REQUESTLINK][img]BASEURL/COLOR-SIZE.png[/img][/url]',
         }, {
             type: 'md',
-            code: '[![alt text](BASEURL/COLOR-SIZE.png)](REQUESTLINK)',
+            code: '[![Donate NIM](BASEURL/COLOR-SIZE.png)](REQUESTLINK)',
         },
     ];
-    private currentMarkupLanguage: MarkupLanguage = this.markupLanguages[0];
+    private selectedMarkupLanguage: MarkupLanguage = this.markupLanguages[0];
 
-    private copyNotifOpened: boolean = false;
+    private copyNotificationOpen: boolean = false;
 
-    private get currentMarkupCode(): string {
-        return this.currentMarkupLanguage.code
+    private get markupCode(): string {
+        return this.selectedMarkupLanguage.code
             .replace('REQUESTLINK', this.requestLink)
-            .replace('COLOR', this.currentColor)
-            .replace('SIZE', this.currentSize)
+            .replace('COLOR', this.selectedColor)
+            .replace('SIZE', this.selectedSize)
             .replace('BASEURL', this.baseUrl);
     }
 
     private copyMarkupCode(): void {
         const el = document.createElement('textarea');
-        el.value = this.currentMarkupCode;
+        el.value = this.markupCode;
         el.setAttribute('readonly', '');
         el.style.position = 'absolute';
         el.style.left = '-9999px';
@@ -100,20 +99,19 @@ export default class ButtonCard extends Vue {
         document.execCommand('copy');
         document.body.removeChild(el);
 
-        this.showCopyValidation();
+        this.showCopyNotification();
     }
 
-    private showCopyValidation(): void {
-        this.copyNotifOpened = true;
+    private showCopyNotification(): void {
+        this.copyNotificationOpen = true;
         setTimeout(() => {
-            this.copyNotifOpened = false;
+            this.copyNotificationOpen = false;
         }, 1000);
     }
 }
 </script>
 
 <style scoped>
-
     .button-card {
         --nqTimingFunction: cubic-bezier(0.25, 0, 0, 1);
 
@@ -122,7 +120,7 @@ export default class ButtonCard extends Vue {
         justify-content: space-between;
     }
 
-    .button-card * {
+    * {
         -webkit-tap-highlight-color: transparent;
     }
 
@@ -142,9 +140,11 @@ export default class ButtonCard extends Vue {
         flex-shrink: 0;
         height: var(--dots-size);
         width:  var(--dots-size);
-        margin: var(--dots-size);
+        margin: calc(var(--dots-size) / 2);
+        margin-top: var(--dots-size);
         border-radius: 50%;
         cursor: pointer;
+        transition: transform .2s var(--nqTimingFunction);
     }
 
     .dot:hover {
@@ -155,7 +155,7 @@ export default class ButtonCard extends Vue {
         display: flex;
         justify-content: space-around;
         align-items: center;
-        margin: 3.625rem 4rem 3.5rem 4rem;
+        margin: 3.625rem 4rem 3.5rem;
     }
 
     .buttons button {
@@ -188,17 +188,17 @@ export default class ButtonCard extends Vue {
 
     .dot::after,
     .buttons button::after {
-        --size: -.625rem;
+        --offset: -.625rem;
         content: "";
         position: absolute;
-        left: var(--size);
-        top: var(--size);
-        right: var(--size);
-        bottom: var(--size);
+        left: var(--offset);
+        top: var(--offset);
+        right: var(--offset);
+        bottom: var(--offset);
         border: .25rem solid var(--nimiq-blue);
-        border-radius: calc(var(--size) * -10);
+        border-radius: calc(var(--offset) * -10);
         opacity: 0;
-        transition: 300ms opacity var(--nqTimingFunction);
+        transition: .3s opacity var(--nqTimingFunction);
     }
 
     .selected::after,
@@ -231,7 +231,6 @@ export default class ButtonCard extends Vue {
 
         width: var(--code-width);
         opacity: .6;
-        overflow: hidden;
         word-break: break-all;
         mask-image: linear-gradient(90deg, #ffff 0%, #ffff var(--code-gradient-begin), #fff0 var(--code-gradient-end), #fff0);
         -webkit-mask-image: linear-gradient(90deg, #ffff 0%, #ffff var(--code-gradient-begin), #fff0 var(--code-gradient-end), #fff0);
@@ -253,7 +252,7 @@ export default class ButtonCard extends Vue {
     .code-section-buttons .inactive {
         background: none;
         opacity: .5;
-        transition: 300ms opacity var(--nqTimingFunction);
+        transition: .3s opacity var(--nqTimingFunction);
     }
 
     .code-section-buttons .inactive:hover {
@@ -262,17 +261,18 @@ export default class ButtonCard extends Vue {
 
     .code-section-buttons :last-child {
         margin-left: auto;
-        text-transform: none;
+        text-transform: capitalize;
     }
 
     .copy-notification {
-        display: inline-block;
+        display: block;
         position: absolute;
         right: 2rem;
         bottom: 6.5rem;
         padding: 2rem;
         border-radius: 1rem;
         color: var(--nimiq-blue);
+        /* nq-blue-bg background with low opacity over gray */
         background: #f4f4f4 radial-gradient(22rem at 100% 100%, #2601330A 0%, #1F23480A 100%);
     }
 
@@ -297,7 +297,7 @@ export default class ButtonCard extends Vue {
 
         .buttons {
             flex-direction: column;
-            margin: 2rem 0rem;
+            margin: 2rem 0;
         }
 
         .buttons button {
