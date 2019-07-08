@@ -5,20 +5,20 @@
             <p class="nq-text">Select the button color and size and choose an output format.</p>
         </div>
         <div class="dots">
-            <div v-for="color in dotsColors"
+            <div v-for="color in Object.values(constructor.ButtonColor)"
                  class="dot"
                  :class="[`nq-${color}-bg`, { selected: color === selectedColor }]"
                  @click="selectedColor = color">
             </div>
         </div>
         <div class="buttons">
-            <button v-for="buttonSize in buttonSizes"
+            <button v-for="buttonSize in Object.values(constructor.ButtonSize)"
                     @click="selectedSize = buttonSize"
                     :style="{ background: `var(--nimiq-${selectedColor}-bg)` }"
                     :class="[selectedColor, {
                         selected: selectedSize === buttonSize,
-                        'nq-button': buttonSize === 'big',
-                        'nq-button-pill': buttonSize === 'small',
+                        'nq-button': buttonSize === constructor.ButtonSize.BIG,
+                        'nq-button-pill': buttonSize === constructor.ButtonSize.SMALL,
                     }]">
                 donate&nbsp;NIM
             </button>
@@ -44,39 +44,28 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 
-type ButtonColor = 'blue' | 'gold' | 'light-blue' | 'green' | 'orange' | 'red';
-type ButtonSize = 'big' | 'small';
-type MarkupLanguageType = 'html' | 'bbcode' | 'md';
-type MarkupLanguage = {
-    type: MarkupLanguageType,
-    code: string,
-};
+const BUTTON_IMAGE_BASE_URL = 'https://nimiq.com/donationBtnImg';
 
 @Component
-export default class ButtonCard extends Vue {
+class ButtonCard extends Vue {
     @Prop(String) public requestLink!: string;
 
-    private dotsColors: ButtonColor[] = ['blue', 'gold', 'light-blue', 'green', 'orange', 'red'];
-    private selectedColor: ButtonColor = 'light-blue';
+    private selectedColor: ButtonCard.ButtonColor = ButtonCard.ButtonColor.LIGHT_BLUE;
+    private selectedSize: ButtonCard.ButtonSize = ButtonCard.ButtonSize.BIG;
 
-    private buttonSizes: ButtonSize[] = ['big', 'small'];
-    private selectedSize: ButtonSize = 'big';
-
-    private baseUrl: string = 'https://nimiq.com/donationBtnImg';
-
-    private markupLanguages: MarkupLanguage[] = [
+    private markupLanguages: ButtonCard.MarkupLanguage[] = [
         {
-            type: 'html',
+            type: ButtonCard.MarkupLanguageType.HTML,
             code: '<div><a href="REQUESTLINK"><img src="BASEURL/COLOR-SIZE.png"/></a></div>',
         }, {
-            type: 'bbcode',
+            type: ButtonCard.MarkupLanguageType.BBCODE,
             code: '[url=REQUESTLINK][img]BASEURL/COLOR-SIZE.png[/img][/url]',
         }, {
-            type: 'md',
+            type: ButtonCard.MarkupLanguageType.MD,
             code: '[![Donate NIM](BASEURL/COLOR-SIZE.png)](REQUESTLINK)',
         },
     ];
-    private selectedMarkupLanguage: MarkupLanguage = this.markupLanguages[0];
+    private selectedMarkupLanguage: ButtonCard.MarkupLanguage = this.markupLanguages[0];
 
     private copyNotificationOpen: boolean = false;
 
@@ -85,7 +74,7 @@ export default class ButtonCard extends Vue {
             .replace('REQUESTLINK', this.requestLink)
             .replace('COLOR', this.selectedColor)
             .replace('SIZE', this.selectedSize)
-            .replace('BASEURL', this.baseUrl);
+            .replace('BASEURL', BUTTON_IMAGE_BASE_URL);
     }
 
     private copyMarkupCode(): void {
@@ -109,6 +98,35 @@ export default class ButtonCard extends Vue {
         }, 1000);
     }
 }
+
+namespace ButtonCard { // tslint:disable-line:no-namespace
+    export enum ButtonColor {
+        BLUE = 'blue',
+        GOLD = 'gold',
+        LIGHT_BLUE = 'light-blue',
+        GREEN = 'green',
+        ORANGE = 'orange',
+        RED = 'red',
+    }
+
+    export enum ButtonSize {
+        BIG = 'big',
+        SMALL = 'small',
+    }
+
+    export enum MarkupLanguageType {
+        HTML = 'html',
+        BBCODE = 'bbcode',
+        MD = 'md',
+    }
+
+    export type MarkupLanguage = {
+        type: MarkupLanguageType,
+        code: string,
+    };
+}
+
+export default ButtonCard;
 </script>
 
 <style scoped>
