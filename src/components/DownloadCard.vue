@@ -1,19 +1,17 @@
 <template>
-    <transition name="transition-fade">
-        <div v-if="address" class="qr-download-card transition-opacity">
-            <h1 class="nq-h1">...get a QR code</h1>
-            <div class="nq-text">
-                Download your QR code as PNG or copy the link.
-            </div>
-
-            <div class="qr-code">
-                <QrCode data="2323343"></QrCode>
-            </div>
-            <div class="nq-text link">
-                safe.nimiq.com/#_request/{{ displayAddress }}
-            </div>
+    <div class="qr-download-card">
+        <h1 class="nq-h1">...get a QR code</h1>
+        <div class="nq-text">
+            Download your QR code as PNG or copy the link.
         </div>
-    </transition>
+
+        <div class="qr-code">
+            <QrCode data="2323343"></QrCode>
+        </div>
+        <div class="nq-text link">
+            safe.nimiq.com/#_request/{{ displayAddress }}
+        </div>
+    </div>
 </template>
 
 

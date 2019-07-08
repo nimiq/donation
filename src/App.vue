@@ -3,7 +3,7 @@
         <RecipientCard :address="recipientAddress"></RecipientCard>
 
         <transition name="transition-fade">
-            <div v-if="!recipientAddress || isMobile" class="welcome-message transition-opacity">
+            <div v-if="!recipientAddress || isMobile" class="welcome-message">
                 <h1>Get NIM Donations</h1>
                 <p>
                     Easily receive donations by creating<br>
@@ -13,11 +13,15 @@
                     </span>
                 </p>
             </div>
-
         </transition>
 
-        <ButtonCard v-if="recipientAddress" :requestLink="requestLink"></ButtonCard>
-        <DownloadCard v-if="recipientAddress" :address="recipientAddress"></DownloadCard>
+        <transition name="transition-fade">
+            <ButtonCard v-if="recipientAddress" :requestLink="requestLink"></ButtonCard>
+        </transition>
+
+        <transition name="transition-fade">
+            <DownloadCard v-if="recipientAddress" :address="recipientAddress"></DownloadCard>
+        </transition>
     </div>
 </template>
 
@@ -116,7 +120,8 @@ export default class App extends Vue {
         margin-right: var(--card-gap);
     }
 
-    .welcome-message.transition-fade-leave-active + .button-card {
+    .welcome-message.transition-fade-leave-active + .button-card,
+    .welcome-message.transition-fade-enter-active + .button-card {
         margin-left: calc(-1 * var(--welcome-message-width)); /* to position it over the fading welcome message */
     }
 
@@ -170,7 +175,8 @@ export default class App extends Vue {
             margin-bottom: calc(2 * var(--card-gap));
         }
 
-        .welcome-message.transition-fade-leave-active + .button-card {
+        .welcome-message.transition-fade-leave-active + .button-card,
+        .welcome-message.transition-fade-enter-active + .button-card {
             margin-left: 0;
         }
     }
