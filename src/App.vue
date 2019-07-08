@@ -16,7 +16,7 @@
 
         </transition>
 
-        <ButtonCard v-if="recipientAddress" :address="recipientAddress"></ButtonCard>
+        <ButtonCard v-if="recipientAddress" :requestLink="requestLink"></ButtonCard>
         <DownloadCard v-if="recipientAddress" :address="recipientAddress"></DownloadCard>
     </div>
 </template>
@@ -33,7 +33,7 @@ import RecipientCard from './components/RecipientCard.vue';
 export default class App extends Vue {
     private static MOBILE_BREAKPOINT = 1150;
 
-    private recipientAddress: string | null = 'NQ32 473Y R5T3 979R 325K S8UT 7E3A NRNS VBX2';
+    private recipientAddress: string = 'NQ32 473Y R5T3 979R 325K S8UT 7E3A NRNS VBX2';
     private isMobile: boolean = false;
 
     private created() {
@@ -48,6 +48,10 @@ export default class App extends Vue {
 
     private _checkWindowSize() {
         this.isMobile = window.innerWidth <= App.MOBILE_BREAKPOINT;
+    }
+
+    private get requestLink() {
+        return 'safe.nimiq.com/#_request/' + this.recipientAddress.replace(/ /g, '');
     }
 }
 </script>
@@ -200,7 +204,9 @@ export default class App extends Vue {
 </style>
 
 <style>
-    .transition-opacity {
+    .transition-opacity,
+    .transition-fade-enter-active,
+    .transition-fade-leave-active {
         transition: opacity .3s cubic-bezier(0.25, 0, 0, 1);
     }
 

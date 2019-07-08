@@ -1,164 +1,334 @@
 <template>
-    <transition name="transition-fade">
-        <div v-if="address" class="button-card transition-opacity">
+    <div class="button-card">
+        <div class="title">
             <h1 class="nq-h1">Get a button...</h1>
-            <div class="nq-text">
-                <p>Select the button color and size and choose an output format.</p>
-            </div>
-
-            <div class="colors">
-                <div class="color-container" v-for="color in colors" :class="{'active': buttonColor == color}" >
-                    <div :class="`color nq-${color}-bg`"  @click="changeColor(color)"></div>
-                </div>
-
-            </div>
-            <div class="nq-buttons">
-                <div :class="`nq-button ${buttonColor}`">
-                    Donate NIM
-                </div>
-                <div :class="`nq-button-s ${buttonColor}`">
-                    Donate NIM
-                </div>
-            </div>
-            <div class="code-container">
-                <div class="code" v-if="preview == 'html'">
-                    &lt;div&gt;&lt;a href="{{safeLink}}"&gt;&lt;img src="button-{{buttonColor}}.png"/&gt;&lt;/a&gt;&lt;/div&gt;
-                </div>
-                <div class="code" v-if="preview == 'bbcode'">
-                    [link={{safeLink}}][img]button-{{buttonColor}}.png[/img][/link]
-                </div>
-                <div class="code" v-if="preview == 'markdown'">
-                    [![Donate](button-{{buttonColor}}.png)]({{safeLink}})
-                </div>
-                <div class="buttons">
-                    <div class="nq-button-s" :class="{'active': preview === 'html'}" @click="preview = 'html'">HTML</div>
-                    <div class="nq-button-s" :class="{'active': preview === 'bbcode'}" @click="preview = 'bbcode'">BBCode</div>
-                    <div class="nq-button-s" :class="{'active': preview === 'markdown'}" @click="preview = 'markdown'">Markdown</div>
-                    <div class="nq-button-s light-blue">Copy</div>
-                </div>
+            <p class="nq-text">Select the button colour and size and choose an output format.</p>
+        </div>
+        <div class="dots">
+            <div v-for="color in dotsColors"
+                 class="dot"
+                 :class="[`nq-${color}-bg`, { selected: color === currentColor }]"
+                 @click="currentColor = color">
             </div>
         </div>
-    </transition>
+        <div class="buttons">
+            <button v-for="buttonSize in buttonSizes"
+                    @click="currentSize = buttonSize"
+                    :style="{ background: `var(--nimiq-${currentColor}-bg)` }"
+                    :class="[currentColor, {
+                        selected: currentSize === buttonSize,
+                        'nq-button': buttonSize === 'big',
+                        'nq-button-pill': buttonSize === 'small',
+                    }]">
+                donate&nbsp;NIM
+            </button>
+        </div>
+        <div class="nq-blue-bg code-section">
+            <code>{{currentMarkupCode}}</code>
+            <div class="code-section-buttons">
+                <button v-for="markupLanguage in markupLanguages"
+                        @click="currentMarkupLanguage = markupLanguage"
+                        :class="{ inactive: markupLanguage.type !== currentMarkupLanguage.type }"
+                        class="nq-button-s inverse">
+                    {{markupLanguage.type}}
+                </button>
+                <button @click="copyMarkupCode()" class="nq-button-pill light-blue">Copy</button>
+            </div>
+            <transition name="transition-fadeout">
+                <div v-if="copyNotifOpened" class="copy-notification">Copied Successfully</div>
+            </transition>
+        </div>
+
+    </div>
 </template>
-
-
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 
-export type ButtonColors = 'blue' | 'gold' | 'light-blue' | 'green' | 'orange' | 'red';
-export type Previews = 'html' | 'bbcode' | 'markdown';
+type ButtonColor = 'blue' | 'gold' | 'light-blue' | 'green' | 'orange' | 'red';
+type ButtonSize = 'big' | 'small';
+type MarkupLanguageType = 'html' | 'bbcode' | 'md';
+type MarkupLanguage = {
+    type: MarkupLanguageType,
+    code: string,
+};
 
 @Component
 export default class ButtonCard extends Vue {
+    @Prop(String) public requestLink!: string;
 
-    @Prop(String) public address!: string;
+    private dotsColors: ButtonColor[] = ['blue', 'gold', 'light-blue', 'green', 'orange', 'red'];
+    private currentColor: ButtonColor = 'light-blue';
 
-    private buttonColor: ButtonColors = 'blue';
-    private displayAddress: string = this.address.split(' ').join('');
+    private buttonSizes: ButtonSize[] = ['big', 'small'];
+    private currentSize: ButtonSize = 'big';
 
-    private safeLink: string = `safe.nimiq.com/#_request/${this.displayAddress}`;
+    private baseUrl: string = 'https://nimiq.com/donationBtnImg';
 
-    private colors: ButtonColors[] = ['blue', 'gold', 'light-blue', 'green', 'orange', 'red'];
+    private markupLanguages: MarkupLanguage[] = [
+        {
+            type: 'html',
+            code: '<div><a href="REQUESTLINK"><img src="BASEURL/COLOR-SIZE.png"/></a></div>',
+        }, {
+            type: 'bbcode',
+            code: '[url=REQUESTLINK][img]BASEURL/COLOR-SIZE.png[/img][/url]',
+        }, {
+            type: 'md',
+            code: '[![alt text](BASEURL/COLOR-SIZE.png)](REQUESTLINK)',
+        },
+    ];
+    private currentMarkupLanguage: MarkupLanguage = this.markupLanguages[0];
 
-    private preview: Previews = 'html';
-    public changeColor(color: ButtonColors) {
-        this.buttonColor = color;
+    private copyNotifOpened: boolean = false;
+
+    private get currentMarkupCode(): string {
+        return this.currentMarkupLanguage.code
+            .replace('REQUESTLINK', this.requestLink)
+            .replace('COLOR', this.currentColor)
+            .replace('SIZE', this.currentSize)
+            .replace('BASEURL', this.baseUrl);
+    }
+
+    private copyMarkupCode(): void {
+        const el = document.createElement('textarea');
+        el.value = this.currentMarkupCode;
+        el.setAttribute('readonly', '');
+        el.style.position = 'absolute';
+        el.style.left = '-9999px';
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+
+        this.showCopyValidation();
+    }
+
+    private showCopyValidation(): void {
+        this.copyNotifOpened = true;
+        setTimeout(() => {
+            this.copyNotifOpened = false;
+        }, 1000);
     }
 }
 </script>
 
 <style scoped>
+
     .button-card {
+        --nqTimingFunction: cubic-bezier(0.25, 0, 0, 1);
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .button-card * {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .title,
+    .dots {
+        margin: 0 7.5rem;
+        text-align: center;
+    }
+
+    .dots {
+        display: flex;
+        justify-content: center;
+    }
+
+    .dot {
+        --dots-size: 2rem;
+        flex-shrink: 0;
+        height: var(--dots-size);
+        width:  var(--dots-size);
+        margin: var(--dots-size);
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .dot:hover {
+        transform: scale(1.1);
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        margin: 3.625rem 4rem 3.5rem 4rem;
+    }
+
+    .buttons button {
+        flex-shrink: 0;
+    }
+
+    .buttons .nq-button {
+        margin: 0;
+        position: relative;
+        box-shadow: none;
+    }
+
+    .buttons .nq-button:active,
+    .buttons .nq-button:focus,
+    .buttons .nq-button:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .buttons .nq-button:active::before,
+    .buttons .nq-button:focus::before,
+    .buttons .nq-button:hover::before {
+        opacity: 0;
+    }
+
+    .dot,
+    .buttons button {
         position: relative;
     }
 
-    .nq-h1 {
-        text-align: center;
-    }
-
-    .nq-text{
-        text-align: center;
-        max-width: 293px;
-        margin: 0 auto;
-    }
-
-    .colors {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 29px;
-    }
-
-    .colors .color {
-        height: 16px;
-        width: 16px;
-        border-radius: 8px;
-        cursor: pointer;
-        padding: 5px;
-        transition: transform 450ms cubic-bezier(.25,0,0,1),box-shadow 450ms cubic-bezier(.25,0,0,1);
-    }
-
-    .colors .color:hover {
-        box-shadow: 0 1rem 2.5rem rgba(0,0,0,.2);
-        transform: translate3D(0,-2px,0);
-    }
-
-    .colors .color-container{
-        border-radius: 12px;
-        padding: 4px;
-    }
-
-    .colors .color-container.active {
-        border: 2px solid rgba(31, 35, 72, 0.2);
-        padding: 2px;
-    }
-
-    .color-container:not(:last-child){
-        margin-right: 16px;
-    }
-
-    .nq-buttons {
-        padding: 0 32px;
-    }
-
-    .nq-button {
-        line-height: 7.5rem;
-        max-width: 220px;
-        display: inline-block;
-        margin-right: 18px;
-    }
-
-    .nq-button-s {
-        line-height: 3.375rem;
-    }
-
-    .code-container {
-        background: var(--nimiq-blue-bg);
-        border-radius: 4px;
+    .dot::after,
+    .buttons button::after {
+        --size: -.625rem;
+        content: "";
         position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        height: 150px;
-        padding: 24px 0 16px 24px;
+        left: var(--size);
+        top: var(--size);
+        right: var(--size);
+        bottom: var(--size);
+        border: .25rem solid var(--nimiq-blue);
+        border-radius: calc(var(--size) * -10);
+        opacity: 0;
+        transition: 300ms opacity var(--nqTimingFunction);
+    }
+
+    .selected::after,
+    .buttons button.selected::after {
+        opacity: .2;
+    }
+
+    .nq-button-pill {
+        text-transform: capitalize;
+        padding: 0 2rem;
+    }
+
+    .code-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 18.75rem;
+        margin: .75rem;
+        margin-top: auto;
+        padding: 2rem;
+        position: relative;
+        border-radius: .5rem;
         overflow: hidden;
     }
 
-    .code-container .buttons .nq-button-s{
-        color: rgba(255, 255, 255, 0.5);
+    .code-section code {
+        --code-width: 150%;
+        --code-gradient-begin: 60%;
+        --code-gradient-end: 67.5%;
+
+        width: var(--code-width);
+        opacity: .6;
+        overflow: hidden;
+        word-break: break-all;
+        mask-image: linear-gradient(90deg, #ffff 0%, #ffff var(--code-gradient-begin), #fff0 var(--code-gradient-end), #fff0);
+        -webkit-mask-image: linear-gradient(90deg, #ffff 0%, #ffff var(--code-gradient-begin), #fff0 var(--code-gradient-end), #fff0);
     }
 
-    .code-container .buttons .nq-button-s.active{
-        background-color: rgba(255,255,255, 0.2);
-        color: white;
+    .code-section-buttons {
+        display: flex;
+        justify-content: flex-start;
     }
 
-    .code-container .code {
-        color: white;
-        opacity: 0.6;
-        font-size: 16px;
-        line-height: 20px;
-        letter-spacing: 1.5px;
-        margin-bottom: 24px;
+    .code-section-buttons button {
+        text-transform: uppercase;
+    }
+
+    .code-section-buttons button:focus::after {
+        display: none;
+    }
+
+    .code-section-buttons .inactive {
+        background: none;
+        opacity: .5;
+        transition: 300ms opacity var(--nqTimingFunction);
+    }
+
+    .code-section-buttons .inactive:hover {
+        opacity: .7;
+    }
+
+    .code-section-buttons :last-child {
+        margin-left: auto;
+        text-transform: none;
+    }
+
+    .copy-notification {
+        display: inline-block;
+        position: absolute;
+        right: 2rem;
+        bottom: 6.5rem;
+        padding: 2rem;
+        border-radius: 1rem;
+        color: var(--nimiq-blue);
+        background: #f4f4f4 radial-gradient(22rem at 100% 100%, #2601330A 0%, #1F23480A 100%);
+    }
+
+    .transition-fadeout-leave-active {
+        transition: 2s opacity var(--nqTimingFunction);
+    }
+
+    .transition-fadeout-leave-to {
+        opacity: 0;
+    }
+
+    @media screen and (max-width: 540px) {
+        .title {
+            margin-top: 0;
+        }
+    }
+
+    @media screen and (max-width: 375px) {
+        .dot {
+            margin: calc(var(--dots-size) / 2);
+        }
+
+        .buttons {
+            flex-direction: column;
+            margin: 2rem 0rem;
+        }
+
+        .buttons button {
+            margin: 1.5rem 0;
+        }
+
+        .buttons button:last-child {
+            margin-bottom: 0;
+        }
+
+        .code-section code {
+            --code-width: 200%;
+            --code-gradient-begin: 43%;
+            --code-gradient-end: 50%;
+        }
+    }
+
+    @media screen and (max-width: 320px) {
+        .title {
+            margin: 0 3.5rem;
+        }
+
+        .code-section {
+            padding: 1rem;
+        }
+
+        .code-section code {
+            --code-width: 250%;
+            --code-gradient-begin: 36%;
+            --code-gradient-end: 41%;
+        }
     }
 </style>
+
