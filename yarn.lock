@@ -40,11 +40,12 @@
   resolved "https://registry.yarnpkg.com/@nimiq/style/-/style-0.7.4.tgz#efc67e243fdb09ff3669d1cf1b2782f9b8ff778d"
   integrity sha512-IzmqbRRjNWvT3wF/erOH5L4uoXd5JgCtBCA1Cek7bY8pv/N06+brzE8euXFd6ebqQ5tiIDilVK/66w1Rli4wWg==
 
-"@nimiq/vue-components@https://github.com/nimiq/vue-components.git#build/master":
+"@nimiq/vue-components@https://github.com/nimiq/vue-components.git#build/donation":
   version "0.1.0"
-  resolved "https://github.com/nimiq/vue-components.git#8f0ebbbfb24afdf274e525aef5860e76e1fbacca"
+  resolved "https://github.com/nimiq/vue-components.git#87956e990f065c5ada6b7e2ef0b65cfcab3901b1"
   dependencies:
     "@nimiq/style" "^0.7.3"
+    input-format "^0.2.4"
     qr-code "github:nimiq/qr-encoder"
     qr-scanner "^1.1.1"
     vue "^2.6.10"
@@ -2993,6 +2994,13 @@ ini@~1.3.0:
   resolved "https://registry.yarnpkg.com/ini/-/ini-1.3.5.tgz#eee25f56db1c9ec6085e0c22778083f596abf927"
   integrity sha512-RZY5huIKCMRWDUqZlEi72f/lmXKMvuszcMBduliQ3nnWbx9X/ZBQO7DijMEYS9EhHBb2qacRUMtC7svLwe0lcw==
 
+input-format@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/input-format/-/input-format-0.2.4.tgz#cb535ac879445908b432c5c341f98a493a1743bf"
+  integrity sha512-1Jo08hAodqk94579lRLCxg6g5nMYbe06ySwP7Dydl26DkmqYfVJL6bV5JuqwQ35Z4f81ad6bh5cbgWNxL5euyg==
+  dependencies:
+    prop-types "^15.5.6"
+
 internal-ip@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/internal-ip/-/internal-ip-4.3.0.tgz#845452baad9d2ca3b69c635a137acb9a0dad0907"
@@ -3320,15 +3328,15 @@ js-queue@2.0.0:
   dependencies:
     easy-stack "^1.0.0"
 
+"js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
+  integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
+
 js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
   integrity sha1-mGbfOVECEw449/mWvOtlRDIJwls=
-
-js-tokens@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
-  integrity sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
 
 js-yaml@^3.13.0, js-yaml@^3.13.1, js-yaml@^3.9.0:
   version "3.13.1"
@@ -3539,6 +3547,13 @@ loglevel@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/loglevel/-/loglevel-1.6.1.tgz#e0fc95133b6ef276cdc8887cdaf24aa6f156f8fa"
   integrity sha1-4PyVEztu8nbNyIh82vJKpvFW+Po=
+
+loose-envify@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
+  integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
+  dependencies:
+    js-tokens "^3.0.0 || ^4.0.0"
 
 lower-case@^1.1.1:
   version "1.1.4"
@@ -4827,6 +4842,15 @@ promise-inflight@^1.0.1:
   resolved "https://registry.yarnpkg.com/promise-inflight/-/promise-inflight-1.0.1.tgz#98472870bf228132fcbdd868129bad12c3c029e3"
   integrity sha1-mEcocL8igTL8vdhoEputEsPAKeM=
 
+prop-types@^15.5.6:
+  version "15.7.2"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
+  integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.8.1"
+
 proxy-addr@~2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/proxy-addr/-/proxy-addr-2.0.5.tgz#34cbd64a2d81f4b1fd21e76f9f06c8a45299ee34"
@@ -4989,6 +5013,11 @@ rc@^1.2.7:
     ini "~1.3.0"
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
+
+react-is@^16.8.1:
+  version "16.8.6"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
+  integrity sha512-aUk3bHfZ2bRSVFFbbeVS4i+lNPZr3/WM5jT2J5omUVV1zzcs1nAaf3l51ctA5FFvCRbhrH0bdAsRRQddFJZPtA==
 
 read-pkg@^5.0.0:
   version "5.1.1"
