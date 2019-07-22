@@ -179,7 +179,7 @@ export default ButtonCard;
     }
 
     .buttons .nq-button {
-        margin: 0;
+        margin: 0 1rem;
         position: relative;
         box-shadow: none;
     }
