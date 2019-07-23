@@ -42,7 +42,7 @@
 
 "@nimiq/vue-components@https://github.com/nimiq/vue-components.git#build/donation":
   version "0.1.0"
-  resolved "https://github.com/nimiq/vue-components.git#87956e990f065c5ada6b7e2ef0b65cfcab3901b1"
+  resolved "https://github.com/nimiq/vue-components.git#cc6223a3fcf40184a601b7323ba0befea9ad0c61"
   dependencies:
     "@nimiq/style" "^0.7.3"
     input-format "^0.2.4"
