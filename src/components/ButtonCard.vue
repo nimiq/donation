@@ -95,7 +95,7 @@ class ButtonCard extends Vue {
         this.copyNotificationOpen = true;
         setTimeout(() => {
             this.copyNotificationOpen = false;
-        }, 1000);
+        }, 1500);
     }
 }
 
@@ -292,11 +292,13 @@ export default ButtonCard;
         background: #f4f4f4 radial-gradient(22rem at 100% 100%, #2601330A 0%, #1F23480A 100%);
     }
 
-    .transition-fadeout-leave-active {
-        transition: 2s opacity var(--nimiq-timing-function);
+    .transition-fadeout-leave-active,
+    .transition-fadeout-enter-active {
+        transition: 250ms opacity var(--nimiq-timing-function);
     }
 
-    .transition-fadeout-leave-to {
+    .transition-fadeout-leave-to,
+    .transition-fadeout-enter {
         opacity: 0;
     }
 
