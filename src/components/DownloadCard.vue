@@ -1,15 +1,16 @@
 <template>
     <div class="qr-download-card">
-        <h1 class="nq-h1">...get a QR code</h1>
-        <div class="nq-text">
-            Download your QR code as PNG or copy the link.
+        <div class="title">
+            <h1 class="nq-h1">...get a QR code</h1>
+            <p class="nq-text"> Download your QR code as PNG or copy the link. </p>
         </div>
 
         <div class="qr-code">
-            <QrCode data="2323343"></QrCode>
+            <QrCode data="2323343" fill="#1F2348"></QrCode>
         </div>
+
         <div class="nq-text link">
-            safe.nimiq.com/#_request/{{ displayAddress }}
+            {{ requestLink }}
         </div>
     </div>
 </template>
@@ -20,40 +21,58 @@
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { QrCode } from '@nimiq/vue-components';
 
-@Component({components: {QrCode}})
+@Component({ components: { QrCode } })
 export default class DownloadCard extends Vue {
 
-    @Prop(String) public address!: string;
-
-    private displayAddress: string = this.address.split(' ').join('');
+    @Prop(String) public requestLink!: string;
 
 }
 </script>
 
 <style scoped>
-    .nq-h1 {
-        text-align: center;
+    .qr-download-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
-    .nq-text{
+    .title {
+        margin: 0 3rem;
         text-align: center;
-        max-width: 261px;
-        margin: 0 auto 40px;
     }
 
     .qr-code {
-        height: 178px;
-        width: 178px;
-        background-color: red;
-        margin: 0 auto 40px;
+        --size: 22.25rem;
+        height: var(--size);
+        width: var(--size);
+        margin: 0 auto;
     }
 
-    .nq-text.link {
-        font-family: Fira Mono;
-        font-style: normal;
-        font-weight: normal;
-        color: var(--nimiq-blue);
-        opacity: 0.6;
-        word-wrap: break-word;
+    /* should'nt the qrcode component adapt his size to his parent size automatically ? */
+    /* and why 240px default size ? should'nt it be 128px instead ? */
+    .qr-code canvas {
+        width: 100%;
+        height: auto;
     }
+
+    .link {
+        margin: 2.625rem 3rem;
+        word-wrap: break-word;
+        opacity: .9;
+    }
+
+    @media screen and (max-width: 540px) {
+        .title {
+            margin-top: 0;
+        }
+    }
+    @media screen and (max-width: 320px) {
+        .title {
+            margin: 0 3.5rem;
+        }
+        .link {
+            margin: 2.625rem 3.5rem;
+        }
+    }
+
 </style>

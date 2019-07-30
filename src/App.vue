@@ -20,7 +20,7 @@
         </transition>
 
         <transition name="transition-fade">
-            <DownloadCard v-if="recipientAddress" :address="recipientAddress"></DownloadCard>
+            <DownloadCard v-if="recipientAddress" :requestLink="requestLink"></DownloadCard>
         </transition>
     </div>
 </template>
