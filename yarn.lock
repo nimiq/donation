@@ -40,6 +40,11 @@
   resolved "https://registry.yarnpkg.com/@nimiq/style/-/style-0.7.4.tgz#efc67e243fdb09ff3669d1cf1b2782f9b8ff778d"
   integrity sha512-IzmqbRRjNWvT3wF/erOH5L4uoXd5JgCtBCA1Cek7bY8pv/N06+brzE8euXFd6ebqQ5tiIDilVK/66w1Rli4wWg==
 
+"@nimiq/utils@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@nimiq/utils/-/utils-0.4.1.tgz#19b77441440d1fd8463315b2a98ffad23eeddb95"
+  integrity sha512-Zl/QfOA7/5EApkEAG7Di8sS/6jlvNhtX462iWot9RiC7tVeaeMk+5Q7WlT5g7dVXSCNyz5IFRYewFP5PlIojgw==
+
 "@nimiq/vue-components@https://github.com/nimiq/vue-components.git#build/donation":
   version "0.1.0"
   resolved "https://github.com/nimiq/vue-components.git#cc6223a3fcf40184a601b7323ba0befea9ad0c61"

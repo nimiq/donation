@@ -34,19 +34,20 @@
                 </button>
                 <button @click="copyMarkupCode" class="nq-button-pill light-blue">copy</button>
             </div>
-            <transition name="transition-fadeout">
-                <div v-if="copyNotificationOpen" class="copy-notification">Copied Successfully</div>
-            </transition>
+            <CopyNotification ref="copyNotification"></CopyNotification>
         </div>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Clipboard } from '@nimiq/utils';
+
+import CopyNotification from './CopyNotification.vue';
 
 const BUTTON_IMAGE_BASE_URL = 'https://nimiq.com/donationBtnImg';
 
-@Component
+@Component({ components: { CopyNotification } })
 class ButtonCard extends Vue {
     @Prop(String) public requestLink!: string;
 
@@ -67,8 +68,6 @@ class ButtonCard extends Vue {
     ];
     private selectedMarkupLanguage: ButtonCard.MarkupLanguage = this.markupLanguages[0];
 
-    private copyNotificationOpen: boolean = false;
-
     private get markupCode(): string {
         return this.selectedMarkupLanguage.code
             .replace('REQUESTLINK', this.requestLink)
@@ -78,24 +77,8 @@ class ButtonCard extends Vue {
     }
 
     private copyMarkupCode(): void {
-        const el = document.createElement('textarea');
-        el.value = this.markupCode;
-        el.setAttribute('readonly', '');
-        el.style.position = 'absolute';
-        el.style.left = '-9999px';
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-
-        this.showCopyNotification();
-    }
-
-    private showCopyNotification(): void {
-        this.copyNotificationOpen = true;
-        setTimeout(() => {
-            this.copyNotificationOpen = false;
-        }, 1500);
+        Clipboard.copy(this.markupCode);
+        (this.$refs.copyNotification as CopyNotification).showCopyNotification();
     }
 }
 
@@ -281,28 +264,6 @@ export default ButtonCard;
     .code-section-buttons :last-child {
         margin-left: auto;
         text-transform: capitalize;
-    }
-
-    .copy-notification {
-        display: block;
-        position: absolute;
-        right: 2rem;
-        bottom: 6.5rem;
-        padding: 2rem;
-        border-radius: 1rem;
-        color: var(--nimiq-blue);
-        /* nq-blue-bg background with low opacity over gray */
-        background: #f4f4f4 radial-gradient(22rem at 100% 100%, #2601330A 0%, #1F23480A 100%);
-    }
-
-    .transition-fadeout-leave-active,
-    .transition-fadeout-enter-active {
-        transition: 250ms opacity var(--nimiq-timing-function);
-    }
-
-    .transition-fadeout-leave-to,
-    .transition-fadeout-enter {
-        opacity: 0;
     }
 
     @media screen and (max-width: 540px) {

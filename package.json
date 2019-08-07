@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@nimiq/style": "^0.7.1",
+    "@nimiq/utils": "^0.4.1",
     "@nimiq/vue-components": "https://github.com/nimiq/vue-components.git#build/donation",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",

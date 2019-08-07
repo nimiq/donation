@@ -6,26 +6,56 @@
         </div>
 
         <div class="qr-code">
-            <QrCode data="2323343" fill="#1F2348"></QrCode>
+            <QrCode :data="requestLink" :fill="QrCodeGradient" ref="qrcode"></QrCode>
+            <div class="qr-code-download" @click="downloadQrCode">
+                <DownloadIcon></DownloadIcon>
+            </div>
         </div>
 
-        <div class="nq-text link">
+        <div class="nq-text link" @click="copyRequestLink">
             {{ requestLink }}
         </div>
+
+        <CopyNotification theme="dark" ref="copyNotification"></CopyNotification>
     </div>
 </template>
 
-
-
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
-import { QrCode } from '@nimiq/vue-components';
+import { QrCode, DownloadIcon } from '@nimiq/vue-components';
+import { Clipboard } from '@nimiq/utils';
 
-@Component({ components: { QrCode } })
+import CopyNotification from './CopyNotification.vue';
+
+@Component({ components: { QrCode, DownloadIcon, CopyNotification } })
 export default class DownloadCard extends Vue {
-
     @Prop(String) public requestLink!: string;
 
+    private QrCodeGradient = { // --nimiq-blue-bg
+        type: 'radial-gradient',
+        position: [1, 1, 0, 1, 1, Math.sqrt(2)],
+        colorStops: [
+            [0, '#260133'],
+            [1, '#1F2348'],
+        ],
+    };
+
+    /* TMP, this will maybe be included into the QrCode component itself */
+    private async downloadQrCode(): Promise<void> {
+        const uri = await (this.$refs.qrcode as QrCode).toDataUrl('image/png');
+        const link = document.createElement('a');
+        link.download = 'qrcode-donation.png';
+        link.href = uri;
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    private copyRequestLink(): void {
+        Clipboard.copy(this.requestLink);
+        (this.$refs.copyNotification as CopyNotification).showCopyNotification();
+    }
 }
 </script>
 
@@ -34,6 +64,11 @@ export default class DownloadCard extends Vue {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        position: relative;
+    }
+
+    * {
+        -webkit-tap-highlight-color: transparent;
     }
 
     .title {
@@ -46,22 +81,51 @@ export default class DownloadCard extends Vue {
         height: var(--size);
         width: var(--size);
         margin: 0 auto;
+        position: relative;
     }
 
-    /* should'nt the qrcode component adapt his size to his parent size automatically ? */
-    /* and why 240px default size ? should'nt it be 128px instead ? */
     .qr-code canvas {
         width: 100%;
         height: auto;
     }
 
+    .qr-code-download {
+        --size: 6rem;
+        height: var(--size);
+        width: var(--size);
+        position: absolute;
+        right: calc(var(--size) / -3);
+        bottom: calc(var(--size) / -3);
+        border-radius: 50%;
+        background-image: var(--nimiq-light-blue-bg);
+        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+    }
+
+    .qr-code-download:hover {
+        background: var(--nimiq-light-blue-darkened);
+        background-image: var(--nimiq-light-blue-bg-darkened);
+    }
+
+    .qr-code-download svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .qr-code-download svg path {
+        fill: white;
+    }
+
     .link {
+        opacity: .9;
         margin: 2.625rem 3rem;
         word-wrap: break-word;
-        opacity: .9;
         font-family: "Fira Mono", monospace;
         line-height: 1.25;
         letter-spacing: 0.1875rem;
+        cursor: copy;
     }
 
     @media screen and (max-width: 540px) {
