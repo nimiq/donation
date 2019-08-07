@@ -246,6 +246,9 @@ export default ButtonCard;
         --code-gradient-end: 67.5%;
 
         width: var(--code-width);
+        font-family: "Fira Mono", monospace;
+        line-height: 1.25;
+        letter-spacing: 0.1875rem;
         opacity: .6;
         word-break: break-all;
         mask-image: linear-gradient(90deg, #ffff 0%, #ffff var(--code-gradient-begin), #fff0 var(--code-gradient-end), #fff0);

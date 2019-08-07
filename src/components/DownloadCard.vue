@@ -59,6 +59,9 @@ export default class DownloadCard extends Vue {
         margin: 2.625rem 3rem;
         word-wrap: break-word;
         opacity: .9;
+        font-family: "Fira Mono", monospace;
+        line-height: 1.25;
+        letter-spacing: 0.1875rem;
     }
 
     @media screen and (max-width: 540px) {
