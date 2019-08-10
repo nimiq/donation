@@ -6,10 +6,10 @@
         </div>
 
         <div class="qr-code">
-            <QrCode :data="requestLink" :fill="QrCodeGradient" ref="qrcode"></QrCode>
-            <div class="qr-code-download" @click="downloadQrCode">
+            <QrCode :data="requestLink" :fill="QR_CODE_GRADIENT" ref="qrcode"></QrCode>
+            <a class="qr-code-download" download="qrcode-donation.png" :href="QRCodeDownloadLink">
                 <DownloadIcon></DownloadIcon>
-            </div>
+            </a>
         </div>
 
         <div class="nq-text link" @click="copyRequestLink">
@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator';
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { QrCode, DownloadIcon } from '@nimiq/vue-components';
 import { Clipboard } from '@nimiq/utils';
 
@@ -31,7 +31,7 @@ import CopyNotification from './CopyNotification.vue';
 export default class DownloadCard extends Vue {
     @Prop(String) public requestLink!: string;
 
-    private QrCodeGradient = { // --nimiq-blue-bg
+    private readonly QR_CODE_GRADIENT = { // --nimiq-blue-bg
         type: 'radial-gradient',
         position: [1, 1, 0, 1, 1, Math.sqrt(2)],
         colorStops: [
@@ -39,22 +39,17 @@ export default class DownloadCard extends Vue {
             [1, '#1F2348'],
         ],
     };
-
-    /* TMP, this will maybe be included into the QrCode component itself */
-    private async downloadQrCode(): Promise<void> {
-        const uri = await (this.$refs.qrcode as QrCode).toDataUrl('image/png');
-        const link = document.createElement('a');
-        link.download = 'qrcode-donation.png';
-        link.href = uri;
-        link.style.display = 'none';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+    private QRCodeDownloadLink: string = '';
 
     private copyRequestLink(): void {
         Clipboard.copy(this.requestLink);
         (this.$refs.copyNotification as CopyNotification).show();
+    }
+
+    @Watch('requestLink',  { immediate: true })
+    private async _updateQRCodeDownloadLink() {
+        await Vue.nextTick();
+        this.QRCodeDownloadLink = await (this.$refs.qrcode as QrCode).toDataUrl('image/png');
     }
 }
 </script>
@@ -96,26 +91,17 @@ export default class DownloadCard extends Vue {
         position: absolute;
         right: calc(var(--size) / -3);
         bottom: calc(var(--size) / -3);
+        padding: 1.875rem;
         border-radius: 50%;
         background-image: var(--nimiq-light-blue-bg);
         box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+        color: white;
         cursor: pointer;
     }
 
     .qr-code-download:hover {
         background: var(--nimiq-light-blue-darkened);
         background-image: var(--nimiq-light-blue-bg-darkened);
-    }
-
-    .qr-code-download svg {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    .qr-code-download svg path {
-        fill: white;
     }
 
     .link {
