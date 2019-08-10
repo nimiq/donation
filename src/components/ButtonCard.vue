@@ -78,7 +78,7 @@ class ButtonCard extends Vue {
 
     private copyMarkupCode(): void {
         Clipboard.copy(this.markupCode);
-        (this.$refs.copyNotification as CopyNotification).showCopyNotification();
+        (this.$refs.copyNotification as CopyNotification).show();
     }
 }
 

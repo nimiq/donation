@@ -54,7 +54,7 @@ export default class DownloadCard extends Vue {
 
     private copyRequestLink(): void {
         Clipboard.copy(this.requestLink);
-        (this.$refs.copyNotification as CopyNotification).showCopyNotification();
+        (this.$refs.copyNotification as CopyNotification).show();
     }
 }
 </script>
@@ -126,6 +126,7 @@ export default class DownloadCard extends Vue {
         line-height: 1.25;
         letter-spacing: 0.1875rem;
         cursor: copy;
+        user-select: none;
     }
 
     @media screen and (max-width: 540px) {

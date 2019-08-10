@@ -1,6 +1,6 @@
 <template>
-    <transition name="transition-fadeout">
-        <div v-if="copyNotificationOpen"
+    <transition name="transition-fade">
+        <div v-if="isOpened"
              :class="theme"
              class="copy-notification">
             Copied Successfully
@@ -20,10 +20,10 @@ import { Component, Vue, Prop } from 'vue-property-decorator';
  *
  * Methods:
  *
- * **showCopyNotification** Show the notification pill at the bottom right for 1.5s
+ * **show** Show the notification pill at the bottom right for 1.5s
  */
 @Component
-class CopyNotification extends Vue {
+export default class CopyNotification extends Vue {
     @Prop({
         type: String,
         default: 'light',
@@ -31,17 +31,20 @@ class CopyNotification extends Vue {
     })
     public theme!: string;
 
-    private copyNotificationOpen: boolean = false;
+    private isOpened: boolean = false;
+    private timeoutID: number | null = null;
 
-    public showCopyNotification(): void {
-        this.copyNotificationOpen = true;
-        setTimeout(() => {
-            this.copyNotificationOpen = false;
+    public show(): void {
+        if (this.timeoutID) {
+            clearTimeout(this.timeoutID);
+        }
+        this.isOpened = true;
+        this.timeoutID = setTimeout(() => {
+            this.isOpened = false;
+            this.timeoutID = null;
         }, 1500);
     }
 }
-
-export default CopyNotification;
 </script>
 
 <style scoped>
@@ -64,15 +67,4 @@ export default CopyNotification;
         color: rgba(255, 255, 255, 0.6);
         background: var(--nimiq-blue-bg);
     }
-
-    .transition-fadeout-leave-active,
-    .transition-fadeout-enter-active {
-        transition: 250ms opacity var(--nimiq-timing-function);
-    }
-
-    .transition-fadeout-leave-to,
-    .transition-fadeout-enter {
-        opacity: 0;
-    }
-
 </style>
