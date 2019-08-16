@@ -55,7 +55,7 @@ export default class App extends Vue {
     }
 
     private get requestLink() {
-        return 'safe.nimiq.com/#_request/' + this.recipientAddress.replace(/ /g, '');
+        return 'safe.nimiq.com/#_request/' + this.recipientAddress.replace(/ /g, '') + '_';
     }
 }
 </script>
