@@ -32,7 +32,7 @@ export default class CopyNotification extends Vue {
     public theme!: string;
 
     private isOpened: boolean = false;
-    private timeoutID: number | null = null;
+    private timeoutID: NodeJS.Timeout | null = null;
 
     public show(): void {
         if (this.timeoutID) {

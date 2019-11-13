@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <RecipientCard :address="recipientAddress"></RecipientCard>
+        <RecipientCard @address-defined="setRecipientAddress"></RecipientCard>
 
         <transition name="transition-fade">
             <div v-if="!recipientAddress || isMobile" class="welcome-message">
@@ -33,17 +33,23 @@ import DownloadCard from './components/DownloadCard.vue';
 import ButtonCard from './components/ButtonCard.vue';
 import RecipientCard from './components/RecipientCard.vue';
 
-@Component({components: {RecipientCard, ButtonCard, DownloadCard}})
+@Component({ components: {
+    RecipientCard,
+    ButtonCard,
+    DownloadCard,
+}})
 export default class App extends Vue {
     private static MOBILE_BREAKPOINT = 1150;
 
-    private recipientAddress: string = 'NQ32 473Y R5T3 979R 325K S8UT 7E3A NRNS VBX2';
+    private recipientAddress: string = '';
     private isMobile: boolean = false;
 
-    private created() {
+    private async created() {
         this._checkWindowSize = this._checkWindowSize.bind(this);
         this._checkWindowSize();
         window.addEventListener('resize', this._checkWindowSize);
+
+        await this.$store.dispatch('initWallets');
     }
 
     private destroyed() {
@@ -56,6 +62,10 @@ export default class App extends Vue {
 
     private get requestLink() {
         return 'safe.nimiq.com/#_request/' + this.recipientAddress.replace(/ /g, '') + '_';
+    }
+
+    private setRecipientAddress(address: string) {
+        this.recipientAddress = address;
     }
 }
 </script>

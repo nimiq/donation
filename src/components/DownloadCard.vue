@@ -29,9 +29,7 @@ import CopyNotification from './CopyNotification.vue';
 
 @Component({ components: { QrCode, DownloadIcon, CopyNotification } })
 export default class DownloadCard extends Vue {
-    @Prop(String) public requestLink!: string;
-
-    private readonly QR_CODE_GRADIENT = { // --nimiq-blue-bg
+    private static readonly QR_CODE_GRADIENT = { // --nimiq-blue-bg
         type: 'radial-gradient',
         position: [1, 1, 0, 1, 1, Math.sqrt(2)],
         colorStops: [
@@ -39,7 +37,14 @@ export default class DownloadCard extends Vue {
             [1, '#1F2348'],
         ],
     };
+
+    @Prop(String) public requestLink!: string;
+
     private QRCodeDownloadLink: string = '';
+
+    private get QR_CODE_GRADIENT() {
+        return DownloadCard.QR_CODE_GRADIENT;
+    }
 
     private copyRequestLink(): void {
         Clipboard.copy(this.requestLink);
