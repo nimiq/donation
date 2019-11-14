@@ -1,6 +1,10 @@
 <template>
     <div id="app">
-        <RecipientCard :address="recipientAddress"></RecipientCard>
+        <RecipientCard
+            @address-defined="setRecipientAddress"
+            @message-change="setMessage"
+            @back="recipientAddress = ''"
+        />
 
         <transition name="transition-fade">
             <div v-if="!recipientAddress || isMobile" class="welcome-message">
@@ -32,12 +36,18 @@ import { Component, Vue } from 'vue-property-decorator';
 import DownloadCard from './components/DownloadCard.vue';
 import ButtonCard from './components/ButtonCard.vue';
 import RecipientCard from './components/RecipientCard.vue';
+import { createRequestLink } from '@nimiq/utils';
 
-@Component({components: {RecipientCard, ButtonCard, DownloadCard}})
+@Component({ components: {
+    RecipientCard,
+    ButtonCard,
+    DownloadCard,
+}})
 export default class App extends Vue {
     private static MOBILE_BREAKPOINT = 1150;
 
-    private recipientAddress: string = 'NQ32 473Y R5T3 979R 325K S8UT 7E3A NRNS VBX2';
+    private recipientAddress: string = '';
+    private requestLinkMessage: string = '';
     private isMobile: boolean = false;
 
     private created() {
@@ -50,12 +60,25 @@ export default class App extends Vue {
         window.removeEventListener('resize', this._checkWindowSize);
     }
 
+    private get requestLink(): string {
+        return createRequestLink(
+            this.recipientAddress,
+            undefined,
+            this.requestLinkMessage,
+            'https://safe.nimiq-testnet.com',
+        );
+    }
+
     private _checkWindowSize() {
         this.isMobile = window.innerWidth <= App.MOBILE_BREAKPOINT;
     }
 
-    private get requestLink() {
-        return 'safe.nimiq.com/#_request/' + this.recipientAddress.replace(/ /g, '') + '_';
+    private setRecipientAddress(address: string) {
+        this.recipientAddress = address;
+    }
+
+    private setMessage(message: string) {
+        this.requestLinkMessage = message;
     }
 }
 </script>
