@@ -1,21 +1,23 @@
 <template>
     <SmallPage class="recipient-card">
-        <template v-if="!isAddressValid"> <!-- step 1 (lot logged in) / step 1.1 (logged in) -->
-            <h1 class="nq-h1">Enter an Address</h1>
-            <p class="nq-text">All received donations will be sent to this Address.</p>
-            <div class="address-input-wrapper">
-                <AddressInput v-model="address"/>
+        <transition name="transition-fade">
+            <div v-if="!isAddressValid"> <!-- step 1 (lot logged in) / step 1.1 (logged in) -->
+                <h1 class="nq-h1">Enter an Address</h1>
+                <p class="nq-text">All received donations will be sent to this Address.</p>
+                <div class="address-input-wrapper">
+                    <AddressInput v-model="address"/>
+                </div>
+                <button class="nq-button-s" @click="chooseAddress">Login existing Account</button> <!-- login action -->
             </div>
-            <button class="nq-button-s" @click="chooseAddress">Login existing Account</button> <!-- login action -->
-        </template>
-        <template v-else> <!-- step 2 -->
-            <ArrowLeftIcon @click="goBack" />
-            <Identicon :address="address"></Identicon>
-            <AddressDisplay :address="address"></AddressDisplay>
-            <hr class="separator" />
-            <input v-model="message" class="nq-input vanishing" type="text" placeholder="Add a message..."/>
-            <div class="nq-text-s">(optional)</div>
-        </template>
+            <div v-else> <!-- step 2 -->
+                <ArrowLeftIcon @click="goBack" />
+                <Identicon :address="address"></Identicon>
+                <AddressDisplay :address="address"></AddressDisplay>
+                <hr class="separator" />
+                <input v-model="message" class="nq-input vanishing" type="text" placeholder="Add a message..."/>
+                <div class="nq-text-s">(optional)</div>
+            </div>
+        </transition>
     </SmallPage>
 </template>
 
@@ -76,30 +78,34 @@ export default class RecipientCard extends Vue {
 
 <style scoped>
     .recipient-card {
+        padding: 4rem 0 3rem;
+        position: relative;
+    }
+
+    .recipient-card > div {
         align-items: center;
         display: flex;
         flex-direction: column;
         /* justify-content: space-between; */
         justify-content: space-evenly; /* temp */
-        padding: 4rem 0 3rem;
-        position: relative;
+        height: 100%;
     }
 
-    .recipient-card > .nq-h1 {
+    .recipient-card .nq-h1 {
         margin-top: 0;
         margin-bottom: .8rem;
     }
 
-    .recipient-card > .nq-text,
-    .recipient-card > .nq-input {
+    .recipient-card .nq-text,
+    .recipient-card .nq-input {
         text-align: center;
     }
 
-    .recipient-card > .nq-text {
+    .recipient-card .nq-text {
         margin: 2rem 5rem;
     }
 
-    .recipient-card > .address-input-wrapper {
+    .recipient-card .address-input-wrapper {
         flex-grow: 1;
         display: flex;
         flex-direction: column;
@@ -107,7 +113,7 @@ export default class RecipientCard extends Vue {
         padding-bottom: 3rem;
     }
 
-    .recipient-card > .nq-button-s {
+    .recipient-card .nq-button-s {
         padding: 0 2rem;
     }
 
@@ -141,12 +147,12 @@ export default class RecipientCard extends Vue {
         display: none; /* temp */
     }
 
-    .recipient-card > .nq-input {
+    .recipient-card .nq-input {
         font-size: 2.5rem;
         display: none; /* temp */
     }
 
-    .recipient-card > .nq-text-s {
+    .recipient-card .nq-text-s {
         margin-top: 0;
         color: var(--nimiq-blue);
         opacity: .3;
