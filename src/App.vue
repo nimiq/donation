@@ -1,6 +1,7 @@
 <template>
     <div id="app">
         <RecipientCard
+            ref="recipientCard"
             @address-defined="setRecipientAddress"
             @message-change="setMessage"
             @back="recipientAddress = ''"
@@ -12,7 +13,7 @@
                 <p>
                     Easily receive donations by creating<br>
                     a personalized button or QR code.<br>
-                    <span class="welcome-start transition-opacity">
+                    <span class="welcome-start transition-opacity" @click="chooseAddress">
                         Choose an Address to start.
                     </span>
                 </p>
@@ -71,6 +72,10 @@ export default class App extends Vue {
 
     private _checkWindowSize() {
         this.isMobile = window.innerWidth <= App.MOBILE_BREAKPOINT;
+    }
+
+    private chooseAddress() {
+        (this.$refs.recipientCard as RecipientCard).chooseAddress();
     }
 
     private setRecipientAddress(address: string) {

@@ -47,7 +47,7 @@ export default class RecipientCard extends Vue {
     private address: string = '';
     private isAddressValid: boolean = false;
 
-    private async chooseAddress() {
+    public async chooseAddress() {
         try {
             const { address } = await RecipientCard.hubApi.chooseAddress({ appName: 'Nimiq Donation' });
             this.address = address;
