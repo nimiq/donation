@@ -3,6 +3,10 @@ import App from './App.vue';
 // @ts-ignore
 import IqonsSvg from '@nimiq/iqons/dist/iqons.min.svg';
 
+if (window.hasBrowserWarning) {
+  throw new Error('Execution aborted due to browser warning');
+}
+
 Vue.config.productionTip = false;
 
 // Set up Identicon SVG file path
