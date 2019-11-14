@@ -182,6 +182,7 @@ export default class App extends Vue {
             height: auto;
             padding-left: 0;
             margin: 7rem 0;
+            text-align: center;
         }
 
         .welcome-message h1 {
