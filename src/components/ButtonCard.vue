@@ -272,6 +272,14 @@ export default ButtonCard;
         }
     }
 
+    @media screen and (max-width: 425px) {
+        .code-section code {
+            --code-width: 200%;
+            --code-gradient-begin: 43%;
+            --code-gradient-end: 50%;
+        }
+    }
+
     @media screen and (max-width: 375px) {
         .dot {
             margin: calc(var(--dots-size) / 2);
@@ -291,9 +299,9 @@ export default ButtonCard;
         }
 
         .code-section code {
-            --code-width: 200%;
-            --code-gradient-begin: 43%;
-            --code-gradient-end: 50%;
+            font-size: 2rem;
+            --code-gradient-begin: 42%;
+            --code-gradient-end: 49%;
         }
     }
 

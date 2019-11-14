@@ -7,7 +7,7 @@
 
         <div class="qr-code">
             <QrCode :data="requestLink" :fill="QR_CODE_GRADIENT" ref="qrcode"></QrCode>
-            <a class="qr-code-download" download="qrcode-donation.png" :href="QRCodeDownloadLink">
+            <a class="qr-code-download" download="qrcode-donation.png" :href="QRCodeDownloadLink" target="_blank">
                 <DownloadIcon></DownloadIcon>
             </a>
         </div>
