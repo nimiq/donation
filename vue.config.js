@@ -25,7 +25,7 @@ const configureWebpack = {
     // Resolve config for yarn build
     resolve: {
         alias: {
-            config: path.join(__dirname, `src/config/config.${buildName}.ts`),
+            // config: path.join(__dirname, `src/config/config.${buildName}.ts`),
             'vue': path.resolve('./node_modules/vue')
         }
     },
