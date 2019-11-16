@@ -66,7 +66,7 @@ export default class App extends Vue {
             this.recipientAddress,
             undefined,
             this.requestLinkMessage,
-            'https://safe.nimiq-testnet.com',
+            'https://safe.nimiq.com',
         );
     }
 
