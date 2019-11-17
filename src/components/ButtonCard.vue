@@ -12,16 +12,13 @@
             </div>
         </div>
         <div class="buttons">
-            <button v-for="buttonSize in Object.values(constructor.ButtonSize)"
-                    @click="selectedSize = buttonSize"
-                    :style="{ background: `var(--nimiq-${selectedColor}-bg)` }"
-                    :class="[selectedColor, {
-                        selected: selectedSize === buttonSize,
-                        'nq-button': buttonSize === constructor.ButtonSize.BIG,
-                        'nq-button-pill': buttonSize === constructor.ButtonSize.SMALL,
-                    }]">
-                donate&nbsp;NIM
-            </button>
+            <div
+                v-for="buttonSize in Object.values(constructor.ButtonSize)"
+                @click="selectedSize = buttonSize"
+                :class="[buttonSize, { selected: selectedSize === buttonSize }]"
+            >
+                <img :src="btnImageBaseUrl + '/' + selectedColor + '-' + buttonSize + '.svg'" />
+            </div>
         </div>
         <div class="nq-blue-bg code-section">
             <code>{{markupCode}}</code>
@@ -45,8 +42,6 @@ import { Clipboard } from '@nimiq/utils';
 
 import CopyNotification from './CopyNotification.vue';
 
-const BUTTON_IMAGE_BASE_URL = 'https://nimiq.com/donationBtnImg';
-
 @Component({ components: { CopyNotification } })
 class ButtonCard extends Vue {
     @Prop(String) public requestLink!: string;
@@ -57,13 +52,13 @@ class ButtonCard extends Vue {
     private markupLanguages: ButtonCard.MarkupLanguage[] = [
         {
             type: ButtonCard.MarkupLanguageType.HTML,
-            code: '<div><a href="REQUESTLINK"><img src="BASEURL/COLOR-SIZE.png"/></a></div>',
+            code: '<div><a href="REQUESTLINK" target="_blank"><img src="BASEURL/COLOR-SIZE.svg"/></a></div>',
         }, {
             type: ButtonCard.MarkupLanguageType.BBCODE,
-            code: '[url=REQUESTLINK][img]BASEURL/COLOR-SIZE.png[/img][/url]',
+            code: '[url=REQUESTLINK][img]BASEURL/COLOR-SIZE.svg[/img][/url]',
         }, {
             type: ButtonCard.MarkupLanguageType.MD,
-            code: '[![Donate NIM](BASEURL/COLOR-SIZE.png)](REQUESTLINK)',
+            code: '[![Donate NIM](BASEURL/COLOR-SIZE.svg)](REQUESTLINK)',
         },
     ];
     private selectedMarkupLanguage: ButtonCard.MarkupLanguage = this.markupLanguages[0];
@@ -73,7 +68,11 @@ class ButtonCard extends Vue {
             .replace('REQUESTLINK', this.requestLink)
             .replace('COLOR', this.selectedColor)
             .replace('SIZE', this.selectedSize)
-            .replace('BASEURL', BUTTON_IMAGE_BASE_URL);
+            .replace('BASEURL', ButtonCard.BUTTON_IMAGE_BASE_URL);
+    }
+
+    private get btnImageBaseUrl() {
+        return ButtonCard.BUTTON_IMAGE_BASE_URL;
     }
 
     private copyMarkupCode(): void {
@@ -107,6 +106,8 @@ namespace ButtonCard { // tslint:disable-line:no-namespace
         type: MarkupLanguageType,
         code: string,
     };
+
+    export const BUTTON_IMAGE_BASE_URL = window.location.origin + '/img/donationBtnImg';
 }
 
 export default ButtonCard;
@@ -157,36 +158,34 @@ export default ButtonCard;
         margin: 3.625rem 4rem 3.5rem;
     }
 
-    .buttons button {
+    .buttons div {
         flex-shrink: 0;
-    }
-
-    .buttons .nq-button {
         margin: 0 1rem;
-        position: relative;
         box-shadow: none;
+        width: auto;
+        cursor: pointer;
+        margin: 1rem;
     }
 
-    .buttons .nq-button:active,
-    .buttons .nq-button:focus,
-    .buttons .nq-button:hover {
-        transform: none;
-        box-shadow: none;
+    .buttons div img {
+        display: block;
     }
 
-    .buttons .nq-button:active::before,
-    .buttons .nq-button:focus::before,
-    .buttons .nq-button:hover::before {
-        opacity: 0;
+    .buttons div.small img {
+        height: 3.25rem;
+    }
+
+    .buttons div.big img {
+        height: 8rem;
     }
 
     .dot,
-    .buttons button {
+    .buttons div {
         position: relative;
     }
 
     .dot::after,
-    .buttons button::after {
+    .buttons div::after {
         --offset: -.625rem;
         content: "";
         position: absolute;
@@ -201,13 +200,8 @@ export default ButtonCard;
     }
 
     .selected::after,
-    .buttons button.selected::after {
+    .buttons div.selected::after {
         opacity: .2;
-    }
-
-    .nq-button-pill {
-        text-transform: capitalize;
-        padding: 0 2rem;
     }
 
     .code-section {
@@ -224,9 +218,9 @@ export default ButtonCard;
     }
 
     .code-section code {
-        --code-width: 150%;
-        --code-gradient-begin: 60%;
-        --code-gradient-end: 67.5%;
+        --code-width: 200%;
+        --code-gradient-begin: 45%;
+        --code-gradient-end: 50%;
 
         width: var(--code-width);
         font-family: "Fira Mono", monospace;
@@ -273,35 +267,28 @@ export default ButtonCard;
     }
 
     @media screen and (max-width: 425px) {
-        .code-section code {
-            --code-width: 200%;
-            --code-gradient-begin: 43%;
-            --code-gradient-end: 50%;
-        }
-    }
-
-    @media screen and (max-width: 375px) {
-        .dot {
-            margin: calc(var(--dots-size) / 2);
+        .title {
+            margin: 0 5rem;
         }
 
         .buttons {
             flex-direction: column;
-            margin: 2rem 0;
-        }
-
-        .buttons button {
-            margin: 1.5rem 0;
-        }
-
-        .buttons button:last-child {
             margin-bottom: 0;
+            margin-top: 1rem;
+        }
+    }
+
+    @media screen and (max-width: 375px) {
+        .title {
+            margin: 0 3rem;
+        }
+
+        .dot {
+            margin: calc(var(--dots-size) / 2);
         }
 
         .code-section code {
             font-size: 2rem;
-            --code-gradient-begin: 42%;
-            --code-gradient-end: 49%;
         }
     }
 
@@ -316,8 +303,8 @@ export default ButtonCard;
 
         .code-section code {
             --code-width: 250%;
-            --code-gradient-begin: 36%;
-            --code-gradient-end: 41%;
+            --code-gradient-begin: 30%;
+            --code-gradient-end: 40%;
         }
     }
 </style>

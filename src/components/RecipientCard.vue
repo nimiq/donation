@@ -1,15 +1,15 @@
 <template>
     <SmallPage class="recipient-card">
         <transition name="transition-fade">
-            <div v-if="!isAddressValid"> <!-- step 1 (lot logged in) / step 1.1 (logged in) -->
+            <div v-if="!isAddressValid">
                 <h1 class="nq-h1">Enter an Address</h1>
                 <p class="nq-text">All received donations will be sent to this Address.</p>
                 <div class="address-input-wrapper">
                     <AddressInput v-model="address"/>
                 </div>
-                <button class="nq-button-s" @click="chooseAddress">Login existing Account</button> <!-- login action -->
+                <button class="nq-button-s" @click="chooseAddress">Login existing Account</button>
             </div>
-            <div v-else> <!-- step 2 -->
+            <div v-else>
                 <ArrowLeftIcon @click="goBack" />
                 <Identicon :address="address"></Identicon>
                 <AddressDisplay :address="address"></AddressDisplay>
@@ -117,7 +117,6 @@ export default class RecipientCard extends Vue {
         padding: 0 2rem;
     }
 
-    /* step 2 */
     .recipient-card svg.nq-icon {
         width: 2.625rem;
         flex-shrink: 0;
