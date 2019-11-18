@@ -51,6 +51,15 @@ export default class App extends Vue {
     private requestLinkMessage: string = '';
     private isMobile: boolean = false;
 
+    private get requestLink(): string {
+        return createRequestLink(
+            this.recipientAddress,
+            undefined,
+            this.requestLinkMessage,
+            'https://safe.nimiq.com',
+        );
+    }
+
     private created() {
         this._checkWindowSize = this._checkWindowSize.bind(this);
         this._checkWindowSize();
@@ -61,29 +70,24 @@ export default class App extends Vue {
         window.removeEventListener('resize', this._checkWindowSize);
     }
 
-    private get requestLink(): string {
-        return createRequestLink(
-            this.recipientAddress,
-            undefined,
-            this.requestLinkMessage,
-            'https://safe.nimiq.com',
-        );
-    }
-
-    private _checkWindowSize() {
-        this.isMobile = window.innerWidth <= App.MOBILE_BREAKPOINT;
-    }
-
     private chooseAddress() {
         (this.$refs.recipientCard as RecipientCard).chooseAddress();
     }
 
     private setRecipientAddress(address: string) {
         this.recipientAddress = address;
+        Vue.nextTick().then(() => {
+            const top = this.$children[1].$el.getBoundingClientRect().top;
+            window.scrollBy(0, top);
+        });
     }
 
     private setMessage(message: string) {
         this.requestLinkMessage = message;
+    }
+
+    private _checkWindowSize() {
+        this.isMobile = window.innerWidth <= App.MOBILE_BREAKPOINT;
     }
 }
 </script>
