@@ -21,7 +21,7 @@
         </transition>
 
         <transition name="transition-fade">
-            <ButtonCard v-if="recipientAddress" :requestLink="requestLink"></ButtonCard>
+            <ButtonCard v-if="recipientAddress" :requestLink="requestLink" ref="buttonCard"></ButtonCard>
         </transition>
 
         <transition name="transition-fade">
@@ -85,7 +85,7 @@ export default class App extends Vue {
 
     private async _scrollToRecipientCard() {
         await Vue.nextTick();
-        const top = this.$children[1].$el.getBoundingClientRect().top;
+        const top = (this.$refs.buttonCard as ButtonCard).$el.getBoundingClientRect().top;
 
         try {
             window.scrollBy({

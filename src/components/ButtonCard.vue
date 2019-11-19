@@ -118,7 +118,7 @@ namespace ButtonCard { // tslint:disable-line:no-namespace
     };
 
     export const BUTTON_IMAGE_BASE_URL = window.location.origin +
-        window.location.pathname + '/img/donationBtnImg';
+        window.location.pathname.replace(/\/$/, '') + '/img/donationBtnImg';
 }
 
 export default ButtonCard;
