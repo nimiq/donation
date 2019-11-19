@@ -7,16 +7,23 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@nimiq/browser-warning": "^0.4.0",
+    "@nimiq/hub-api": "^1.0.1",
+    "@nimiq/iqons": "^1.5.2",
     "@nimiq/style": "^0.7.1",
-    "@nimiq/vue-components": "https://github.com/nimiq/vue-components.git#build/master",
+    "@nimiq/utils": "^0.4.1",
+    "@nimiq/vue-components": "https://github.com/nimiq/vue-components.git#build/donation",
     "vue": "^2.6.10",
+    "vue-svg-loader": "^0.12.0",
     "vue-class-component": "^7.0.2",
     "vue-property-decorator": "^8.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-typescript": "^3.7.0",
     "@vue/cli-service": "^3.7.0",
+    "copy-webpack-plugin": "^4.5.2",
     "typescript": "^3.4.3",
-    "vue-template-compiler": "^2.5.21"
+    "vue-template-compiler": "^2.5.21",
+    "write-file-webpack-plugin": "^4.5.0"
   }
 }

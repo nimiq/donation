@@ -1,29 +1,31 @@
 <template>
     <div id="app">
-        <SmallPage class="recipient-card">
-            RecipientCard
-        </SmallPage>
+        <RecipientCard
+            ref="recipientCard"
+            @address-defined="setRecipientAddress"
+            @message-change="setMessage"
+            @back="recipientAddress = ''"
+        />
+
         <transition name="transition-fade">
-            <div v-if="!recipientAddress || isMobile" class="welcome-message transition-opacity">
+            <div v-if="!recipientAddress || isMobile" class="welcome-message">
                 <h1>Get NIM Donations</h1>
                 <p>
                     Easily receive donations by creating<br>
                     a personalized button or QR code.<br>
-                    <span class="welcome-start transition-opacity">
+                    <span class="welcome-start transition-opacity" @click="chooseAddress">
                         Choose an Address to start.
                     </span>
                 </p>
             </div>
         </transition>
+
         <transition name="transition-fade">
-            <div v-if="recipientAddress" class="button-card transition-opacity">
-                ButtonCard
-            </div>
+            <ButtonCard v-if="recipientAddress" :requestLink="requestLink"></ButtonCard>
         </transition>
+
         <transition name="transition-fade">
-            <div v-if="recipientAddress" class="qr-download-card transition-opacity">
-                QrDownloadCard
-            </div>
+            <DownloadCard v-if="recipientAddress" :requestLink="requestLink"></DownloadCard>
         </transition>
     </div>
 </template>
@@ -31,16 +33,32 @@
 <script lang="ts">
 import '@nimiq/style/nimiq-style.min.css';
 import '@nimiq/vue-components/dist/NimiqVueComponents.css';
-
 import { Component, Vue } from 'vue-property-decorator';
-import { SmallPage } from '@nimiq/vue-components';
+import DownloadCard from './components/DownloadCard.vue';
+import ButtonCard from './components/ButtonCard.vue';
+import RecipientCard from './components/RecipientCard.vue';
+import { createRequestLink } from '@nimiq/utils';
 
-@Component({components: {SmallPage}})
+@Component({ components: {
+    RecipientCard,
+    ButtonCard,
+    DownloadCard,
+}})
 export default class App extends Vue {
     private static MOBILE_BREAKPOINT = 1150;
 
-    private recipientAddress: string | null = null;
+    private recipientAddress: string = '';
+    private requestLinkMessage: string = '';
     private isMobile: boolean = false;
+
+    private get requestLink(): string {
+        return createRequestLink(
+            this.recipientAddress,
+            undefined,
+            this.requestLinkMessage,
+            'https://safe.nimiq.com',
+        );
+    }
 
     private created() {
         this._checkWindowSize = this._checkWindowSize.bind(this);
@@ -50,6 +68,33 @@ export default class App extends Vue {
 
     private destroyed() {
         window.removeEventListener('resize', this._checkWindowSize);
+    }
+
+    private chooseAddress() {
+        (this.$refs.recipientCard as RecipientCard).chooseAddress();
+    }
+
+    private setRecipientAddress(address: string) {
+        this.recipientAddress = address;
+        this._scrollToRecipientCard();
+    }
+
+    private setMessage(message: string) {
+        this.requestLinkMessage = message;
+    }
+
+    private async _scrollToRecipientCard() {
+        await Vue.nextTick();
+        const top = this.$children[1].$el.getBoundingClientRect().top;
+
+        try {
+            window.scrollBy({
+                top,
+                behavior: 'smooth',
+            });
+        } catch (e) {
+            window.scrollBy(0, top);
+        }
     }
 
     private _checkWindowSize() {
@@ -118,7 +163,8 @@ export default class App extends Vue {
         margin-right: var(--card-gap);
     }
 
-    .welcome-message.transition-fade-leave-active + .button-card {
+    .welcome-message.transition-fade-leave-active + .button-card,
+    .welcome-message.transition-fade-enter-active + .button-card {
         margin-left: calc(-1 * var(--welcome-message-width)); /* to position it over the fading welcome message */
     }
 
@@ -156,6 +202,7 @@ export default class App extends Vue {
             height: auto;
             padding-left: 0;
             margin: 7rem 0;
+            text-align: center;
         }
 
         .welcome-message h1 {
@@ -172,7 +219,8 @@ export default class App extends Vue {
             margin-bottom: calc(2 * var(--card-gap));
         }
 
-        .welcome-message.transition-fade-leave-active + .button-card {
+        .welcome-message.transition-fade-leave-active + .button-card,
+        .welcome-message.transition-fade-enter-active + .button-card {
             margin-left: 0;
         }
     }
@@ -206,7 +254,9 @@ export default class App extends Vue {
 </style>
 
 <style>
-    .transition-opacity {
+    .transition-opacity,
+    .transition-fade-enter-active,
+    .transition-fade-leave-active {
         transition: opacity .3s cubic-bezier(0.25, 0, 0, 1);
     }
 
