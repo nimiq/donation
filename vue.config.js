@@ -6,14 +6,6 @@ const browserWarning = fs.readFileSync(
     __dirname + '/node_modules/@nimiq/browser-warning/dist/browser-warning.html.template'
 );
 
-const buildName = process.env.build
-    ? process.env.build
-    : process.env.NODE_ENV === 'production'
-        ? 'testnet'
-        : 'local';
-
-console.log('Building for:', buildName);
-
 const configureWebpack = {
     plugins: [
         new CopyWebpackPlugin([
@@ -25,7 +17,6 @@ const configureWebpack = {
     // Resolve config for yarn build
     resolve: {
         alias: {
-            // config: path.join(__dirname, `src/config/config.${buildName}.ts`),
             'vue': path.resolve('./node_modules/vue')
         }
     },
@@ -59,7 +50,32 @@ const pages = {
     },
 };
 
+const chainWebpack = config => {
+    const svgRule = config.module.rule('svg');
+    const svgDefaultHandler = svgRule.uses.values()[0];
+    svgRule.uses.clear();
+
+    config.module
+        .rule('svg')
+        // Add new icon SVG rule
+        .oneOf('img')
+            .test(/img/)
+            .use('vue-svg-loader')
+                .loader('vue-svg-loader')
+                .options({ svgo: false })
+                .end()
+            .end()
+            // Re-add default SVG rule
+            .oneOf('default')
+            .use()
+                .loader(svgDefaultHandler.get('loader'))
+                .options(svgDefaultHandler.get('options'))
+                .end()
+            .end()
+}
+
 module.exports = {
     pages,
     configureWebpack,
+    chainWebpack,
 }

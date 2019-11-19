@@ -17,7 +17,7 @@
                 @click="selectedSize = buttonSize"
                 :class="[buttonSize, { selected: selectedSize === buttonSize }]"
             >
-                <img :src="btnImageBaseUrl + '/' + selectedColor + '-' + buttonSize + '.svg'" />
+                <component :is="buttonComponentName(buttonSize)" />
             </div>
         </div>
         <div class="nq-blue-bg code-section">
@@ -39,10 +39,11 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator';
 import { Clipboard } from '@nimiq/utils';
+import * as Buttons from './Buttons';
 
 import CopyNotification from './CopyNotification.vue';
 
-@Component({ components: { CopyNotification } })
+@Component({ components: { CopyNotification, ...Buttons } })
 class ButtonCard extends Vue {
     @Prop(String) public requestLink!: string;
 
@@ -71,8 +72,17 @@ class ButtonCard extends Vue {
             .replace('BASEURL', ButtonCard.BUTTON_IMAGE_BASE_URL);
     }
 
-    private get btnImageBaseUrl() {
-        return ButtonCard.BUTTON_IMAGE_BASE_URL;
+    private buttonComponentName(buttonSize: string) {
+        const color = this.selectedColor.split('-').reduce((acc, cur) =>
+            acc + cur.charAt(0).toUpperCase() + cur.slice(1)
+        , '');
+
+        return (
+            color +
+            buttonSize.charAt(0).toUpperCase() +
+            buttonSize.slice(1) +
+            'Button'
+        );
     }
 
     private copyMarkupCode(): void {
@@ -107,7 +117,8 @@ namespace ButtonCard { // tslint:disable-line:no-namespace
         code: string,
     };
 
-    export const BUTTON_IMAGE_BASE_URL = window.location.origin + '/img/donationBtnImg';
+    export const BUTTON_IMAGE_BASE_URL = window.location.origin +
+        window.location.pathname + '/img/donationBtnImg';
 }
 
 export default ButtonCard;
@@ -167,15 +178,15 @@ export default ButtonCard;
         margin: 1rem;
     }
 
-    .buttons div img {
+    .buttons div svg {
         display: block;
     }
 
-    .buttons div.small img {
+    .buttons div.small svg {
         height: 3.25rem;
     }
 
-    .buttons div.big img {
+    .buttons div.big svg {
         height: 8rem;
     }
 

@@ -26,6 +26,7 @@
     ]
   },
   "include": [
+    "types/svg.d.ts",
     "types/HubApi.d.ts",
     "types/BrowserWarning.d.ts",
     "src/**/*.ts",

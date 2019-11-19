@@ -76,14 +76,25 @@ export default class App extends Vue {
 
     private setRecipientAddress(address: string) {
         this.recipientAddress = address;
-        Vue.nextTick().then(() => {
-            const top = this.$children[1].$el.getBoundingClientRect().top;
-            window.scrollBy(0, top);
-        });
+        this._scrollToRecipientCard();
     }
 
     private setMessage(message: string) {
         this.requestLinkMessage = message;
+    }
+
+    private async _scrollToRecipientCard() {
+        await Vue.nextTick();
+        const top = this.$children[1].$el.getBoundingClientRect().top;
+
+        try {
+            window.scrollBy({
+                top,
+                behavior: 'smooth',
+            });
+        } catch (e) {
+            window.scrollBy(0, top);
+        }
     }
 
     private _checkWindowSize() {

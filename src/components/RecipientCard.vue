@@ -41,7 +41,7 @@ import HubApi from '@nimiq/hub-api';
     ArrowLeftIcon,
 }})
 export default class RecipientCard extends Vue {
-    private static hubApi: any = new HubApi('https://hub.nimiq.com');
+    private static hubApi = new HubApi('https://hub.nimiq.com');
 
     private message: string = '';
     private address: string = '';
@@ -54,10 +54,6 @@ export default class RecipientCard extends Vue {
         } catch (e) {
             console.error(e);
         }
-    }
-
-    private setDonationAddress(walletId: string, address: string) {
-        this.address = address;
     }
 
     private goBack() {
