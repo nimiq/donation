@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,22 +9,26 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title>Nimiq Donation</title>
 </head>
+
 <body>
-<header class="logo">
-    <span class="nq-icon nimiq-logo"></span>
-    <span class="logo-wordmark">Nimiq</span>
-    <span class="logo-subtitle">Donation</span>
-</header>
-<div id="app">
-    <noscript>
-        <div>
-            We're sorry, but this app doesn't work properly without JavaScript enabled. Please enable it to continue.
-        </div>
-    </noscript>
-</div>
-<footer>
-    <a href="https://www.nimiq.com/privacy/" target="_blank">Privacy Policy</a>
-</footer>
-<!-- built files will be auto injected -->
+    <header class="logo">
+        <span class="nq-icon nimiq-logo"></span>
+        <span class="logo-wordmark">Nimiq</span>
+        <span class="logo-subtitle">Donation</span>
+    </header>
+    <div id="app">
+        <noscript>
+            <div>
+                We're sorry, but this app doesn't work properly without JavaScript enabled. Please enable it to continue.
+            </div>
+        </noscript>
+        <%= htmlWebpackPlugin.options.browserWarning %>
+    </div>
+    <footer>
+        <a href="https://www.nimiq.com/privacy/" target="_blank">Privacy Policy</a>
+    </footer>
+    <script type="text/javascript" src="/browser-warning.js"></script>
+    <!-- built files will be auto injected -->
 </body>
+
 </html>
