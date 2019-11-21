@@ -76,6 +76,7 @@ export default class RecipientCard extends Vue {
     .recipient-card {
         padding: 4rem 0 3rem;
         position: relative;
+        display: block;
     }
 
     .recipient-card > div {
