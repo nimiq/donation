@@ -7,7 +7,7 @@
 
         <div class="qr-code">
             <QrCode :data="requestLink" :fill="QR_CODE_GRADIENT" ref="qrcode"></QrCode>
-            <a class="qr-code-download" download="qrcode-donation.png" :href="QRCodeDownloadLink" target="_blank">
+            <a class="nq-button light-blue qr-code-download" download="qrcode-donation.png" :href="QRCodeDownloadLink" target="_blank">
                 <DownloadIcon></DownloadIcon>
             </a>
         </div>
@@ -91,6 +91,7 @@ export default class DownloadCard extends Vue {
 
     .qr-code-download {
         --size: 6rem;
+        display: block;
         height: var(--size);
         width: var(--size);
         position: absolute;
@@ -98,15 +99,10 @@ export default class DownloadCard extends Vue {
         bottom: calc(var(--size) / -3);
         padding: 1.875rem;
         border-radius: 50%;
-        background-image: var(--nimiq-light-blue-bg);
-        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
+        min-width: 0;
+        margin: 0;
         color: white;
         cursor: pointer;
-    }
-
-    .qr-code-download:hover {
-        background: var(--nimiq-light-blue-darkened);
-        background-image: var(--nimiq-light-blue-bg-darkened);
     }
 
     .link {

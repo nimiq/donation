@@ -13,7 +13,7 @@
                 <p>
                     Easily receive donations by creating<br>
                     a personalized button or QR code.<br>
-                    <span class="welcome-start transition-opacity" @click="chooseAddress">
+                    <span class="welcome-start">
                         Choose an Address to start.
                     </span>
                 </p>
@@ -21,7 +21,7 @@
         </transition>
 
         <transition name="transition-fade">
-            <ButtonCard v-if="recipientAddress" :requestLink="requestLink" ref="buttonCard"></ButtonCard>
+            <ButtonCard v-if="recipientAddress" :requestLink="requestLink"></ButtonCard>
         </transition>
 
         <transition name="transition-fade">
@@ -70,10 +70,6 @@ export default class App extends Vue {
         window.removeEventListener('resize', this._checkWindowSize);
     }
 
-    private chooseAddress() {
-        (this.$refs.recipientCard as RecipientCard).chooseAddress();
-    }
-
     private setRecipientAddress(address: string) {
         this.recipientAddress = address;
         this._scrollToRecipientCard();
@@ -85,7 +81,8 @@ export default class App extends Vue {
 
     private async _scrollToRecipientCard() {
         await Vue.nextTick();
-        const top = (this.$refs.buttonCard as ButtonCard).$el.getBoundingClientRect().top;
+        const clientRect = (this.$refs.recipientCard as ButtonCard).$el.getBoundingClientRect();
+        const top = clientRect.top + clientRect.height;
 
         try {
             window.scrollBy({
@@ -106,7 +103,6 @@ export default class App extends Vue {
 <style scoped>
     #app {
         --card-height: 57.75rem;
-        --recipient-card-width: 42.5rem;
         --button-card-width: 51.5rem;
         --qr-download-card-width: 36.75rem;
         --card-gap: 1rem;
@@ -146,15 +142,10 @@ export default class App extends Vue {
 
     .welcome-message .welcome-start {
         opacity: .5;
-        cursor: pointer;
-    }
-
-    .welcome-message .welcome-start:hover {
-        opacity: .7;
     }
 
     .recipient-card {
-        width: var(--recipient-card-width);
+        width: 42.5rem;
         margin: 0 calc(2 * var(--card-gap)) 0 0;
     }
 
@@ -181,7 +172,6 @@ export default class App extends Vue {
 
     @media (max-width: 1150px) {
         #app {
-            --recipient-card-width: 62.5rem;
             --button-card-width: 62.5rem;
             --qr-download-card-width: 62.5rem;
             --welcome-message-width: 62.5rem;
@@ -194,7 +184,7 @@ export default class App extends Vue {
         .button-card,
         .qr-download-card {
             margin-right: 0;
-            margin-bottom: var(--card-gap);
+            margin-bottom: calc(4 * var(--card-gap));
         }
 
         .welcome-message {
@@ -214,11 +204,6 @@ export default class App extends Vue {
             font-size: 3rem;
         }
 
-        .recipient-card {
-            max-width: unset;
-            margin-bottom: calc(2 * var(--card-gap));
-        }
-
         .welcome-message.transition-fade-leave-active + .button-card,
         .welcome-message.transition-fade-enter-active + .button-card {
             margin-left: 0;
@@ -227,7 +212,6 @@ export default class App extends Vue {
 
     @media (max-width: 540px) {
         #app {
-            --recipient-card-width: 100%;
             --button-card-width: 100%;
             --qr-download-card-width: 100%;
             --welcome-message-width: 100%;
@@ -243,12 +227,21 @@ export default class App extends Vue {
     }
 
     @media (max-width: 450px) {
+        .welcome-message {
+            text-align: left;
+            max-width: 42.5rem;
+        }
+
         .welcome-message h1 {
             font-size: 3rem;
         }
 
         .welcome-message p {
             font-size: 2.5rem;
+        }
+
+        .recipient-card {
+            width: 100%;
         }
     }
 </style>

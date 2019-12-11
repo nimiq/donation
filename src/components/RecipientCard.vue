@@ -120,8 +120,18 @@ export default class RecipientCard extends Vue {
         position: absolute;
         left: 4rem;
         top: 4.875rem;
-        opacity: .3;
         cursor: pointer;
+
+        transition-property: opacity, transform;
+        transition-duration: .3s;
+        transition-timing-function: var(--nimiq-ease);
+        opacity: .3;
+        transform: translate3d(0, 0, 0);
+    }
+
+    .recipient-card svg.nq-icon:hover {
+        opacity: 1;
+        transform: translate3d(-0.375rem, 0, 0);
     }
 
     .recipient-card .identicon {

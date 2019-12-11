@@ -176,6 +176,11 @@ export default ButtonCard;
         width: auto;
         cursor: pointer;
         margin: 1rem;
+        transition: transform .2s var(--nimiq-timing-function);
+    }
+
+    .buttons div:hover {
+        transform: scale(1.02);
     }
 
     .buttons div svg {
@@ -229,9 +234,9 @@ export default ButtonCard;
     }
 
     .code-section code {
-        --code-width: 200%;
-        --code-gradient-begin: 45%;
-        --code-gradient-end: 50%;
+        --code-width: 210%;
+        --code-gradient-begin: 42%;
+        --code-gradient-end: 49%;
 
         width: var(--code-width);
         font-family: "Fira Mono", monospace;
@@ -286,6 +291,12 @@ export default ButtonCard;
             flex-direction: column;
             margin-bottom: 0;
             margin-top: 1rem;
+        }
+
+        .code-section code {
+            --code-width: 250%;
+            --code-gradient-begin: 34%;
+            --code-gradient-end: 40.5%;
         }
     }
 

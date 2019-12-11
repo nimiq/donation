@@ -84,6 +84,10 @@ body > header > a {
     display: flex;
 }
 
+.nq-h1 {
+    margin-bottom: 2rem !important;
+}
+
 noscript {
     flex-grow: 1;
     display: flex;
