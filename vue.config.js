@@ -72,10 +72,12 @@ const chainWebpack = config => {
                 .options(svgDefaultHandler.get('options'))
                 .end()
             .end()
-}
+};
 
 module.exports = {
     pages,
     configureWebpack,
     chainWebpack,
-}
+    outputDir: 'deployment/dist',
+    publicPath: '',
+};
