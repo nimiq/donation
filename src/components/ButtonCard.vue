@@ -29,7 +29,7 @@
                         class="nq-button-s inverse">
                     {{markupLanguage.type}}
                 </button>
-                <button @click="copyMarkupCode" class="nq-button-pill light-blue">copy</button>
+                <button @click="copyMarkupCode" class="nq-button-pill green">copy</button>
             </div>
             <CopyNotification ref="copyNotification"></CopyNotification>
         </div>

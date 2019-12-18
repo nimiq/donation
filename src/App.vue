@@ -2,6 +2,7 @@
     <div id="app">
         <RecipientCard
             ref="recipientCard"
+            :address="recipientAddress"
             @address-defined="setRecipientAddress"
             @message-change="setMessage"
             @back="recipientAddress = ''"
@@ -11,7 +12,7 @@
             <div v-if="!recipientAddress || isMobile" class="welcome-message">
                 <h1>Get NIM Donations</h1>
                 <p>
-                    Easily receive donations by creating<br>
+                    Easily receive donations by creating
                     a personalized button or QR code.<br>
                     <span class="welcome-start">
                         Choose an Address to start.

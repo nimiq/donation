@@ -12,11 +12,11 @@
             </a>
         </div>
 
-        <div class="nq-text link" @click="copyRequestLink">
-            {{ requestLink }}
+        <div class="nq-text link" @click="copyRequestLink" :class="{ copied: copied }">
+            <div>
+                {{ requestLink.replace(/http(s?):\/\//g, '') }}
+            </div>
         </div>
-
-        <CopyNotification theme="dark" ref="copyNotification"></CopyNotification>
     </div>
 </template>
 
@@ -25,9 +25,7 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
 import { QrCode, DownloadIcon } from '@nimiq/vue-components';
 import { Clipboard } from '@nimiq/utils';
 
-import CopyNotification from './CopyNotification.vue';
-
-@Component({ components: { QrCode, DownloadIcon, CopyNotification } })
+@Component({ components: { QrCode, DownloadIcon } })
 export default class DownloadCard extends Vue {
     private static readonly QR_CODE_GRADIENT = { // --nimiq-blue-bg
         type: 'radial-gradient',
@@ -40,7 +38,11 @@ export default class DownloadCard extends Vue {
 
     @Prop(String) public requestLink!: string;
 
+    public $refs!: {
+        qrcode: QrCode,
+    };
     private QRCodeDownloadLink: string = '';
+    private copied: boolean = false;
 
     private get QR_CODE_GRADIENT() {
         return DownloadCard.QR_CODE_GRADIENT;
@@ -48,13 +50,17 @@ export default class DownloadCard extends Vue {
 
     private copyRequestLink(): void {
         Clipboard.copy(this.requestLink);
-        (this.$refs.copyNotification as CopyNotification).show();
+        if (this.copied) return;
+        this.copied = true;
+        setTimeout(() => {
+            this.copied = false;
+        }, 1500);
     }
 
     @Watch('requestLink',  { immediate: true })
     private async _updateQRCodeDownloadLink() {
         await Vue.nextTick();
-        this.QRCodeDownloadLink = await (this.$refs.qrcode as QrCode).toDataUrl('image/png');
+        this.QRCodeDownloadLink = await this.$refs.qrcode.toDataUrl('image/png');
     }
 }
 </script>
@@ -107,26 +113,63 @@ export default class DownloadCard extends Vue {
 
     .link {
         opacity: .9;
-        margin: 2.625rem 3rem;
+        margin: 2rem;
+        margin-top: 4rem;
+        padding: 1rem;
         word-wrap: break-word;
         font-family: "Fira Mono", monospace;
         line-height: 1.25;
         letter-spacing: 0.1875rem;
         cursor: copy;
         user-select: none;
+        position: relative;
     }
 
-    @media screen and (max-width: 540px) {
+    .link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        background-color: var(--nimiq-blue);
+        opacity: .06;
+        border-radius: .5rem;
+    }
+
+    .link::after {
+        content: 'COPIED';
+        font-family: 'Muli';
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.75px;
+        position: absolute;
+        bottom: 1.25rem;
+        right: 1.25rem;
+        color: var(--nimiq-green);
+        background-color: #E1E0E3;
+        opacity: 0;
+        box-shadow: 0px 0px 6px 2px #E1E0E3;
+        transition-property: opacity;
+        transition-duration: .25s;
+        transition-timing-function: var(--nimiq-ease);
+    }
+
+    .link.copied::after {
+        opacity: 1;
+    }
+
+    @media (max-width: 540px) {
         .title {
             margin-top: 0;
         }
     }
-    @media screen and (max-width: 320px) {
+
+    @media (max-width: 320px) {
         .title {
             margin: 0 3.5rem;
-        }
-        .link {
-            margin: 2.625rem 3.5rem;
         }
     }
 

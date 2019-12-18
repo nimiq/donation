@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@nimiq/browser-warning": "^0.4.0",
-    "@nimiq/hub-api": "^1.0.1",
+    "@nimiq/hub-api": "^1.2.0-beta.6",
     "@nimiq/iqons": "^1.5.2",
     "@nimiq/style": "^0.7.1",
     "@nimiq/utils": "^0.4.1",

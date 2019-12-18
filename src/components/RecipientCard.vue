@@ -29,7 +29,7 @@ import {
     Identicon,
     ArrowLeftIcon,
 } from '@nimiq/vue-components';
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
+import { Component, Vue, Watch } from 'vue-property-decorator';
 import { ValidationUtils } from '@nimiq/utils';
 import HubApi from '@nimiq/hub-api';
 
