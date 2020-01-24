@@ -67,10 +67,10 @@
     call-me-maybe "^1.0.1"
     glob-to-regexp "^0.3.0"
 
-"@nimiq/browser-warning@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@nimiq/browser-warning/-/browser-warning-0.4.0.tgz#82f9c88e75f85fbaab838e970d1f27ad506beefd"
-  integrity sha512-7NEqSzsYwNvLM4KpnGtmSppVJju0HWjrHtbRMWefaXDfugM6bCbMqVLc112Bm88EefPdISj1cTr0pcyZZOCzuQ==
+"@nimiq/browser-warning@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@nimiq/browser-warning/-/browser-warning-1.0.0.tgz#57d5a95adbedfc06e980eae7e17e1b5742621a8b"
+  integrity sha512-lTYpwyghm85a1IRGlaYFK4PgPKbegnexPlUIoJ3ssI24h/pAnAhD1u9diWpe2LcnVW6AbS82Dgd8YqsICSyweg==
 
 "@nimiq/core-web@^1.5.3":
   version "1.5.3"
@@ -768,11 +768,6 @@ bfj@^6.1.1:
     tryer "^1.0.1"
 
 big-integer@^1.6.44, big-integer@^1.6.48:
-  version "1.6.48"
-  resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.48.tgz#8fd88bd1632cba4a1c8c3e3d7159f08bb95b4b9e"
-  integrity sha512-j51egjPa7/i+RdiRuJbPdJ2FIUYYPhvYLjzoYbcMMm62ooO6F94fETG4MTs46zPAF9Brs04OajboA/qTGuz78w==
-
-big-integer@^1.6.48:
   version "1.6.48"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.48.tgz#8fd88bd1632cba4a1c8c3e3d7159f08bb95b4b9e"
   integrity sha512-j51egjPa7/i+RdiRuJbPdJ2FIUYYPhvYLjzoYbcMMm62ooO6F94fETG4MTs46zPAF9Brs04OajboA/qTGuz78w==

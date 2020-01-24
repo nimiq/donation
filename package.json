@@ -7,7 +7,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@nimiq/browser-warning": "^0.4.0",
+    "@nimiq/browser-warning": "^1.0.0",
     "@nimiq/hub-api": "^1.2.0-beta.7",
     "@nimiq/iqons": "^1.5.2",
     "@nimiq/style": "^0.7.1",
