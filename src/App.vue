@@ -38,7 +38,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import DownloadCard from './components/DownloadCard.vue';
 import ButtonCard from './components/ButtonCard.vue';
 import RecipientCard from './components/RecipientCard.vue';
-import { createRequestLink } from '@nimiq/utils';
+import { createRequestLink, Currency, NimiqRequestLinkType } from '@nimiq/utils';
 
 @Component({ components: {
     RecipientCard,
@@ -53,11 +53,13 @@ export default class App extends Vue {
     private isMobile: boolean = false;
 
     private get requestLink(): string {
-        return createRequestLink(
+        return 'https://wallet.nimiq.com/' + createRequestLink(
             this.recipientAddress,
-            undefined,
-            this.requestLinkMessage,
-            'https://safe.nimiq.com',
+            {
+                currency: Currency.NIM,
+                type: NimiqRequestLinkType.URI,
+                message: this.requestLinkMessage,
+            },
         );
     }
 
