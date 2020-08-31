@@ -49,7 +49,7 @@ export default class RecipientCard extends Vue {
 
     public async chooseAddress() {
         try {
-            const { address } = await RecipientCard.hubApi.chooseAddress({ appName: 'Nimiq Donation' });
+            const { address } = await RecipientCard.hubApi.chooseAddress({ appName: 'Donation Button Creator' });
             this.address = address;
         } catch (e) {
             console.error(e);
