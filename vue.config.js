@@ -6,6 +6,12 @@ const browserWarning = fs.readFileSync(
     __dirname + '/node_modules/@nimiq/browser-warning/dist/browser-warning.html.template'
 );
 
+// Fix build for Node version with OpenSSL 3
+const crypto = require('crypto');
+
+const origCreateHash = crypto.createHash;
+crypto.createHash = (alg, opts) => origCreateHash(alg === 'md4' ? 'md5' : alg, opts);
+
 const configureWebpack = {
     plugins: [
         new CopyWebpackPlugin([
