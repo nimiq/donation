@@ -2,6 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 // @ts-ignore
 import IqonsSvg from '@nimiq/iqons/dist/iqons.min.svg';
+import loadIubenda from './analytics/Iubenda';
 
 if (window.hasBrowserWarning) {
   throw new Error('Execution aborted due to browser warning');
@@ -21,3 +22,5 @@ if (IqonsSvg[0] === '"') {
 new Vue({
   render: (h) => h(App),
 }).$mount('#app');
+
+loadIubenda(); // Only loads in production
